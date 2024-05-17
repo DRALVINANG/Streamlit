@@ -1,8 +1,9 @@
-import yfinance >= 0.2.31b2 as yf
+import appdirs as ad
+ad.user_cache_dir = lambda *args: '/tmp"
 
 import streamlit as st
 import pandas as pd
-#import yfinance as yf
+import yfinance as yf
 import plotly.graph_objects as go
 
 st.title("Stock Candlestick Chart")
