@@ -1,5 +1,5 @@
 import appdirs as ad
-ad.user_cache_dir = lambda *args: '/tmp"
+ad.user_cache_dir = lambda *args: "/tmp"
 
 import streamlit as st
 import pandas as pd
