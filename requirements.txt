@@ -1,4 +1,4 @@
 yfinance>=0.2.31b2
 pandas
-plotly.graph_objects
+plotly
 matplotlib
