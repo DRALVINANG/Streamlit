@@ -1,7 +1,8 @@
 import streamlit as st
 import pandas as pd
-import yfinance==0.2.32 as yf
+
 import plotly.graph_objects as go
+import yfinance >= 0.2.32 as yf
 
 st.title("Stock Candlestick Chart")
 
