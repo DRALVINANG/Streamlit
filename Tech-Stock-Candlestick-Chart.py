@@ -1,5 +1,3 @@
-!pip install git+https://github.com/ranaroussi/yfinance.git
-
 import streamlit as st
 import pandas as pd
 import yfinance as yf
