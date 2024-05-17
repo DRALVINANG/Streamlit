@@ -1,4 +1,5 @@
-yfinance>=0.2.31b2
+streamlit >=0.78.0
+yfinance
 pandas
 plotly
 matplotlib
