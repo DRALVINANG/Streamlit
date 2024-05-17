@@ -1,4 +1,4 @@
-import yfinance as yf
+import yfinance==0.2.28 as yf
 
 import streamlit as st
 import pandas as pd
