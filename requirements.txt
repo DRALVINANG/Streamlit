@@ -1,4 +1,4 @@
 yfinance
 pandas
-plotly
+plotly.graph_objects
 matplotlib
