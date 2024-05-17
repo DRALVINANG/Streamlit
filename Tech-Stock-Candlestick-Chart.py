@@ -13,7 +13,7 @@ tickers = ["AAPL", "TSLA", "AMZN", "MSFT", "NVDA", "INTC"]
 selected_stock = st.sidebar.selectbox("Select a stock", tickers)
 
 # Get stock data from Yahoo Finance
-stock_data = yf.download(selected_stock, start="2013-01-01")
+stock_data = yf.download(selected_stock, start="2013-01-01", threads = False)
 
 # Create candlestick chart
 candlestick = go.Figure(data=[go.Candlestick(
