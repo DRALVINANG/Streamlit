@@ -1,6 +1,6 @@
 pyDOE
 scipy
 numpy
-streamlit >=0.78.0
+streamlit
 pandas
 
