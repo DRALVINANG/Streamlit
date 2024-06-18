@@ -1,2 +1,3 @@
-pyDOE
-#@ git+https://github.com/clicumu/pyDOE2.git@master
+pyDOE2==0.3.8
+scipy
+numpy
