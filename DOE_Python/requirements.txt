@@ -1,6 +1,0 @@
-pyDOE
-scipy
-numpy
-streamlit
-pandas
-
