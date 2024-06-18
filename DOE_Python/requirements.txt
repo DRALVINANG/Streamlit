@@ -1,0 +1,1 @@
+pyDOE2 @ git+https://github.com/clicumu/pyDOE2.git@master
