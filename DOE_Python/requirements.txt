@@ -1,2 +1,2 @@
-pyDOE2 
+pyDOE
 #@ git+https://github.com/clicumu/pyDOE2.git@master
