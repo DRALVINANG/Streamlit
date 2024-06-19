@@ -1,0 +1,4 @@
+streamlit
+numpy
+pyDOE2
+pandas
