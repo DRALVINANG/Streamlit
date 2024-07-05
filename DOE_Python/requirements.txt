@@ -2,3 +2,4 @@ streamlit
 numpy
 pyDOE2
 pandas
+matplotlib.pyplot
