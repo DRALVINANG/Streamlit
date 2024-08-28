@@ -2,8 +2,8 @@ import streamlit as st
 import pandas as pd
 import plotly.graph_objects as go
 import yfinance as yf
-from bs4 import BeautifulSoup
 import requests
+from bs4 import BeautifulSoup
 
 # Function to get S&P 500 tickers and company names
 def get_sp500_tickers_and_names():
@@ -18,6 +18,28 @@ def get_sp500_tickers_and_names():
         name = cells[1].text.strip()
         tickers_and_names[ticker] = name
     return tickers_and_names
+
+# Function to get company information from Wikipedia
+def get_company_info(ticker):
+    company_name = sp500_data[ticker]
+    search_url = f"https://en.wikipedia.org/wiki/{company_name.replace(' ', '_')}"
+    response = requests.get(search_url)
+    soup = BeautifulSoup(response.text, 'html.parser')
+    info_box = soup.find('table', {'class': 'infobox'})
+
+    if not info_box:
+        return None
+
+    info = {}
+    for row in info_box.find_all('tr'):
+        header = row.find('th')
+        cell = row.find('td')
+        if header and cell:
+            header_text = header.text.strip()
+            cell_text = cell.text.strip()
+            info[header_text] = cell_text
+
+    return info
 
 # Fetch S&P 500 tickers and company names
 sp500_data = get_sp500_tickers_and_names()
@@ -80,3 +102,18 @@ else:
 
     # Display the chart in Streamlit
     st.plotly_chart(candlestick)
+
+    # Fetch and display company information
+    st.subheader("Company Information")
+
+    try:
+        company_info = get_company_info(selected_ticker)
+        if company_info:
+            st.write(f"**Company Name:** {sp500_data[selected_ticker]}")
+            st.write(f"**Wikipedia Page:** [Link](https://en.wikipedia.org/wiki/{sp500_data[selected_ticker].replace(' ', '_')})")
+            for key, value in company_info.items():
+                st.write(f"**{key}:** {value}")
+        else:
+            st.write("No additional company information found.")
+    except Exception as e:
+        st.error(f"Error fetching company information: {e}")
