@@ -1,4 +1,7 @@
 import streamlit as st
+import pandas as pd
+import plotly.graph_objects as go
+import yfinance as yf
 
 # List of cryptocurrency coins
 crypto_coin = [
@@ -59,7 +62,8 @@ crypto_coin = [
 ]
 
 # Streamlit app
-st.title("Cryptocurrency Coin Explorer")
+st.markdown("<h1 style='color: red; font-weight: bold;'>Cryptocurrency Coin Explorer</h1>", unsafe_allow_html=True)
+st.markdown("<p style='color: brown;'>Explore the details and historical pricing of various cryptocurrencies.</p>", unsafe_allow_html=True)
 
 # Select a Coin section
 st.markdown("## **Select a Coin**")
@@ -71,14 +75,37 @@ selected_coin_name = st.selectbox("Select a Coin", coin_names)
 # Find the selected coin's details
 selected_coin = next(coin for coin in crypto_coin if coin['name'] == selected_coin_name)
 
-# Display the selected coin's details
-st.write(f"**Name:** {selected_coin['name']}")
-st.write(f"**Ticker:** {selected_coin['ticker']}")
-st.write(f"**Price:** ${selected_coin['price']:.2f}")
-st.write(f"**24h Change:** {selected_coin['24h_change']:.2f}%")
-st.write(f"**Volume:** ${selected_coin['volume']:,.2f}")
-st.write(f"**Supply:** {selected_coin['supply']:,.0f}")
-st.write(f"**Category:** {selected_coin['category']}")
+# Display the selected coin's details in a CSV preview format
+st.subheader("Coin Details Preview")
+coin_details_df = pd.DataFrame({
+    "Name": [selected_coin['name']],
+    "Ticker": [selected_coin['ticker']],
+    "Price": [selected_coin['price']],
+    "24h Change": [selected_coin['24h_change']],
+    "Volume": [selected_coin['volume']],
+    "Supply": [selected_coin['supply']],
+    "Category": [selected_coin['category']]
+})
+
+# Fetch historical data for the selected coin
+selected_ticker = selected_coin['ticker']
+coin_data = yf.download(selected_ticker + '-USD', start="2013-01-01", threads=False)
+
+# Add Open, High, Low, Close prices to the preview
+coin_details_df = pd.concat([coin_details_df, coin_data[['Open', 'High', 'Low', 'Close']].tail(5)], axis=1)
+
+st.write(coin_details_df)
+
+# Download button for CSV with date index
+coin_data.reset_index(inplace=True)  # Reset index to include date in the DataFrame
+combined_df = pd.concat([coin_details_df, coin_data[['Date', 'Open', 'High', 'Low', 'Close']].tail(5)], axis=1)
+csv_data = combined_df.to_csv(index=False).encode('utf-8')
+st.download_button(
+    label="Download CSV",
+    data=csv_data,
+    file_name=f"{selected_coin['ticker']}_details.csv",
+    mime="text/csv"
+)
 
 # Horizontal line separator
 st.markdown("---")
@@ -95,7 +122,6 @@ if selected_condition == "Category is PLATFORM":
     result = 'PLATFORM' in selected_coin['category']
 elif selected_condition == "24h Change > 5%":
     result = selected_coin['24h_change'] > 5
-# Add more conditions as needed
 
 st.write(f"**Condition:** {selected_condition}")
 st.write(f"**Result:** {result}")
@@ -106,3 +132,45 @@ if selected_condition == "24h Change > 5%":
         st.write(f"**Recommendation:** Buy {selected_coin['name']}! It's volatile enough.")
     else:
         st.write(f"**Recommendation:** Do not buy {selected_coin['name']}! Not volatile enough.")
+
+# Horizontal line separator before the chart
+st.markdown("---")
+
+# Create candlestick chart
+candlestick = go.Figure(data=[go.Candlestick(
+    x=coin_data.index,
+    open=coin_data["Open"],
+    high=coin_data["High"],
+    low=coin_data["Low"],
+    close=coin_data["Close"]
+)])
+
+# Customize chart layout
+candlestick.update_layout(
+    title={
+        'text': f"{selected_ticker} Candlestick Chart",
+        'y': 0.9,
+        'x': 0.5,
+        'xanchor': 'center',
+        'yanchor': 'top'
+    }
+)
+
+candlestick.update_yaxes(title_text=f"{selected_ticker} Price")
+
+# Display the chart in Streamlit
+st.plotly_chart(candlestick)
+
+# Brief description of the coin's history
+coin_history = {
+    "BTC": "Bitcoin is the first decentralized cryptocurrency, created in 2009 by an anonymous person (or group) known as Satoshi Nakamoto. It allows peer-to-peer transactions without the need for intermediaries, relying on blockchain technology to secure and verify transactions.",
+    "ETH": "Ethereum is a decentralized platform that enables developers to build and deploy smart contracts and decentralized applications (dApps). Launched in 2015, it introduced the concept of programmable money and is the second-largest cryptocurrency by market capitalization.",
+    "ADA": "Cardano is a blockchain platform that aims to provide a more secure and scalable infrastructure for the development of dApps and smart contracts. Launched in 2017, it is known for its research-driven approach and uses a proof-of-stake consensus mechanism.",
+    "BNB": "Binance Coin is the native cryptocurrency of the Binance exchange, launched in 2017. It is used for trading fee discounts, token sales, and various applications within the Binance ecosystem.",
+    "XRP": "XRP is the native digital asset of the Ripple network, designed for fast and low-cost international money transfers. Launched in 2012, it aims to facilitate cross-border payments and is used by several financial institutions.",
+    "DOGE": "Dogecoin started as a meme cryptocurrency in 2013, featuring the Shiba Inu dog from the 'Doge' meme. Initially created as a joke, it has gained a large community and is used for tipping and charitable donations."
+}
+
+# Display the coin's history
+st.subheader("Coin History")
+st.write(coin_history[selected_coin['ticker']])
