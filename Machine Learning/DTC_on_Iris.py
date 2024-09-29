@@ -3,7 +3,7 @@ import pandas as pd
 from sklearn.preprocessing import LabelEncoder
 from sklearn.model_selection import train_test_split
 from sklearn import tree
-from graphviz import Source
+#from graphviz import Source
 
 # Load the iris dataset
 iris = pd.read_csv("https://www.alvinang.sg/s/iris_dataset.csv")
