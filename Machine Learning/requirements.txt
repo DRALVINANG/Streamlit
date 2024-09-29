@@ -1,4 +1,4 @@
-streamlit >=0.78.0
+streamlit 
 pandas
 matplotlib
 graphviz
