@@ -49,11 +49,11 @@ predicted_species = le.inverse_transform(predicted_class)
 st.write(f"Predicted class for the simulated data: **{predicted_species[0]}**")
 
 # Generate and display the decision tree graph
-class_names = le.classes_
-graph = Source(tree.export_graphviz(dtc, out_file=None,
-                      feature_names=X.columns,
-                      class_names=class_names,
-                      filled=True))
-st.subheader("Decision Tree Visualization")
-st.graphviz_chart(graph)
+#class_names = le.classes_
+#graph = Source(tree.export_graphviz(dtc, out_file=None,
+#                      feature_names=X.columns,
+#                      class_names=class_names,
+#                      filled=True))
+#st.subheader("Decision Tree Visualization")
+#st.graphviz_chart(graph)
 
