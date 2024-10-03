@@ -1,5 +1,7 @@
 #note this app only runs locally after installing graphviz and scikit-learn
 #on linux i install graphviz via sudo apt-get install graphviz
+#go here if u wanna learn how to install into windows
+#https://medium.com/python-in-plain-english/how-to-install-graphviz-into-thonny-d8ea9b45b40a
 
 import streamlit as st
 import pandas as pd
