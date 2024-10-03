@@ -6,6 +6,7 @@ import numpy as np
 from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import confusion_matrix, accuracy_score, classification_report
+from sklearn.preprocessing import StandardScaler  # Import StandardScaler
 
 # Function to draw radar (spider) chart
 def plot_radar_chart(feature_values, feature_labels):
@@ -51,17 +52,25 @@ y = df['Target']
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=2)
 
 #------------------------------------------------------------------------------------------------
-# Step 3: Logistic Regression Model
+# Step 3: Feature Scaling
+#------------------------------------------------------------------------------------------------
+# Apply StandardScaler to standardize the dataset (mean=0, variance=1)
+scaler = StandardScaler()
+X_train_scaled = scaler.fit_transform(X_train)  # Fit to training data and transform
+X_test_scaled = scaler.transform(X_test)  # Only transform the test data (no fitting)
+
+#------------------------------------------------------------------------------------------------
+# Step 4: Logistic Regression Model
 #------------------------------------------------------------------------------------------------
 # Initialize and fit the logistic regression model
 logistic_model = LogisticRegression(max_iter=5000)  # Increase max_iter to ensure convergence
-logistic_model.fit(X_train, y_train)
+logistic_model.fit(X_train_scaled, y_train)
 
 # Predictions on the test set
-y_pred = logistic_model.predict(X_test)
+y_pred = logistic_model.predict(X_test_scaled)
 
 #------------------------------------------------------------------------------------------------
-# Step 4: Model Evaluation with Confusion Matrix
+# Step 5: Model Evaluation with Confusion Matrix
 #------------------------------------------------------------------------------------------------
 # Display Confusion Matrix
 cm = confusion_matrix(y_test, y_pred)
@@ -82,7 +91,7 @@ st.subheader("Classification Report")
 st.text(classification_report(y_test, y_pred))
 
 #------------------------------------------------------------------------------------------------
-# Step 5: User Input for Prediction on Simulated Data
+# Step 6: User Input for Prediction on Simulated Data
 #------------------------------------------------------------------------------------------------
 # Sidebar sliders for user input on various features
 st.sidebar.subheader("Input Tumor Features for Prediction")
@@ -134,9 +143,12 @@ input_data = pd.DataFrame({
     'worst fractal dimension': [X['worst fractal dimension'].mean()],
 })
 
+# Apply the same scaling to the input data
+input_data_scaled = scaler.transform(input_data)
+
 # Predict the class for the input data
-predicted_class = logistic_model.predict(input_data)
-predicted_probability = logistic_model.predict_proba(input_data)
+predicted_class = logistic_model.predict(input_data_scaled)
+predicted_probability = logistic_model.predict_proba(input_data_scaled)
 
 # Display predicted class and probability
 st.subheader("Prediction for Simulated Data")
@@ -144,7 +156,7 @@ st.write(f"Predicted class: **{'Benign' if predicted_class[0] == 1 else 'Maligna
 st.write(f"Probability of being benign: **{predicted_probability[0][1]:.2f}**")
 
 #------------------------------------------------------------------------------------------------
-# Step 6: Display Radar Chart
+# Step 7: Display Radar Chart
 #------------------------------------------------------------------------------------------------
 # Create a radar chart to visualize feature input
 plot_radar_chart(
