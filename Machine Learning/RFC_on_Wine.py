@@ -118,4 +118,6 @@ dot_data = export_graphviz(estimators[0], out_file=None,
                            filled=True, rounded=True)
 graph = Source(dot_data)
 st.subheader("Decision Tree Visualization")
+st.write("(just one randomly chosen tree from the Random Forest...)")
 st.graphviz_chart(graph)
+
