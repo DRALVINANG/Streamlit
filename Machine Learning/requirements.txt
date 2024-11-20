@@ -6,8 +6,3 @@ plotly==4.14.3
 pandas==1.2.3
 joblib==0.16.0
 scikit-learn
-
-
-
-#streamlit==1.29.0
-#scikit-learn==1.3.2
