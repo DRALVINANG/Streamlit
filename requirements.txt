@@ -3,3 +3,8 @@ yfinance == 0.2.28
 pandas
 plotly
 matplotlib
+
+
+scikit-learn
+numpy
+seaborn
