@@ -1,8 +1,7 @@
-streamlit
+streamlit >=0.78.0
+yfinance == 0.2.28
 pandas
 matplotlib
-seaborn
-numpy
 scikit-learn
 
 
