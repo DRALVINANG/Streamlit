@@ -2,6 +2,7 @@ streamlit >=0.78.0
 pandas
 plotly
 matplotlib
-scikit_learn
+scikit-learn
+sklearn
 numpy
 seaborn
