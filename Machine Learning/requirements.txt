@@ -1,6 +1,0 @@
-seaborn
-numpy==1.23.5
-streamlit >=0.78.0
-pandas
-matplotlib
-scikit-learn
