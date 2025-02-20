@@ -1,9 +1,3 @@
-import subprocess
-import sys
-
-# Upgrade yfinance
-subprocess.check_call([sys.executable, "-m", "pip", "install", "--upgrade", "yfinance"])
-
 import streamlit as st
 import pandas as pd
 
