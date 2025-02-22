@@ -1,12 +1,18 @@
 import streamlit as st
-import yfinance as yf
 import pandas as pd
 import matplotlib.pyplot as plt
 from sklearn.linear_model import LinearRegression
 from sklearn.metrics import r2_score
 
-# Define a list of stock tickers
-tickers = ['TSLA', 'AAPL', 'AMZN', 'GOOGL', 'META']
+# Define a list of stock tickers and their respective GitHub CSV URLs
+stock_data_urls = {
+    "TSLA": "https://raw.githubusercontent.com/DRALVINANG/Streamlit/refs/heads/main/datasets/tsla_2024.csv",
+    "AAPL": "https://raw.githubusercontent.com/DRALVINANG/Streamlit/refs/heads/main/datasets/aapl_2024.csv",
+    "AMZN": "https://raw.githubusercontent.com/DRALVINANG/Streamlit/refs/heads/main/datasets/amzn_2024.csv",
+    "MSFT": "https://raw.githubusercontent.com/DRALVINANG/Streamlit/refs/heads/main/datasets/msft_2024.csv",
+    "NVDA": "https://raw.githubusercontent.com/DRALVINANG/Streamlit/refs/heads/main/datasets/nvda_2024.csv",
+    "INTC": "https://raw.githubusercontent.com/DRALVINANG/Streamlit/refs/heads/main/datasets/intc_2024.csv"
+}
 
 # Create a Streamlit app
 st.title('Predicting the Close Price of a Tech Stock')
@@ -14,14 +20,19 @@ st.write('## Applying Linear Regression (LR) to predict Today\'s close price usi
 st.write('This app analyzes the relationship between the high and close prices of a selected tech stock and uses linear regression to predict the close price based on a hypothetical high price.')
 
 # Add a selectbox for the user to choose a stock
-selected_ticker = st.selectbox('Select a stock', tickers)
+selected_ticker = st.selectbox('Select a stock', list(stock_data_urls.keys()))
 
 # Add date input widgets with default values
 start_date = st.date_input('Start date', value=pd.to_datetime('2020-01-01'))
 end_date = st.date_input('End date', value=pd.to_datetime('2021-12-31'))
 
-# Download the stock data
-df = yf.download(selected_ticker, start=start_date, end=end_date)
+# Fetch the stock data from the GitHub CSV link
+stock_data_url = stock_data_urls[selected_ticker]
+df = pd.read_csv(stock_data_url)
+
+# Ensure the 'Date' column is converted to datetime if it exists
+df['Date'] = pd.to_datetime(df['Date'])
+df.set_index('Date', inplace=True)
 
 # Shift the High price to yesterday's price
 X = df['High'].shift(+1)  # yesterday's High
