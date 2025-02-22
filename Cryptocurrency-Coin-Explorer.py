@@ -1,9 +1,8 @@
 import streamlit as st
 import pandas as pd
 import plotly.graph_objects as go
-import yfinance as yf
 
-# List of cryptocurrency coins
+# List of cryptocurrency coins with their corresponding GitHub CSV file links
 crypto_coin = [
     {
         "name": "Bitcoin",
@@ -12,7 +11,8 @@ crypto_coin = [
         "24h_change": 1.48,
         "volume": 670552492185,
         "supply": 18721781,
-        "category": 'CURRENCY'
+        "category": 'CURRENCY',
+        "csv_url": "https://raw.githubusercontent.com/DRALVINANG/Streamlit/refs/heads/main/datasets/btc_2024.csv"  # Corrected URL
     },
     {
         "name": "Ethereum",
@@ -21,7 +21,8 @@ crypto_coin = [
         "24h_change": 0.05,
         "volume": 281073942766,
         "supply": 116083174,
-        "category": 'PLATFORM'
+        "category": 'PLATFORM',
+        "csv_url": "https://raw.githubusercontent.com/DRALVINANG/Streamlit/refs/heads/main/datasets/eth_2024.csv"
     },
     {
         "name": "Cardano",
@@ -30,7 +31,8 @@ crypto_coin = [
         "24h_change": 10.26,
         "volume": 51951358766,
         "supply": 31948309441,
-        "category": 'PLATFORM'
+        "category": 'PLATFORM',
+        "csv_url": "https://raw.githubusercontent.com/DRALVINANG/Streamlit/refs/heads/main/datasets/ada_2024.csv"
     },
     {
         "name": "Binance Coin",
@@ -39,7 +41,8 @@ crypto_coin = [
         "24h_change": 6.08,
         "volume": 50829735875,
         "supply": 153432897,
-        "category": 'EXCHANGE'
+        "category": 'EXCHANGE',
+        "csv_url": "https://raw.githubusercontent.com/DRALVINANG/Streamlit/refs/heads/main/datasets/bnb_2024.csv"
     },
     {
         "name": "XRP",
@@ -48,7 +51,8 @@ crypto_coin = [
         "24h_change": 7.39,
         "volume": 40594034312,
         "supply": 46143602688,
-        "category": 'CURRENCY'
+        "category": 'CURRENCY',
+        "csv_url": "https://raw.githubusercontent.com/DRALVINANG/Streamlit/refs/heads/main/datasets/xrp_2024.csv"
     },
     {
         "name": "Dogecoin",
@@ -57,7 +61,8 @@ crypto_coin = [
         "24h_change": 2.11,
         "volume": 39593068555,
         "supply": 129813129789,
-        "category": 'CURRENCY'
+        "category": 'CURRENCY',
+        "csv_url": "https://raw.githubusercontent.com/DRALVINANG/Streamlit/refs/heads/main/datasets/doge_2024.csv"
     }
 ]
 
@@ -87,9 +92,8 @@ coin_details_df = pd.DataFrame({
     "Category": [selected_coin['category']]
 })
 
-# Fetch historical data for the selected coin
-selected_ticker = selected_coin['ticker']
-coin_data = yf.download(selected_ticker + '-USD', start="2013-01-01", threads=False)
+# Fetch historical data for the selected coin from the GitHub CSV link
+coin_data = pd.read_csv(selected_coin['csv_url'])
 
 # Add Open, High, Low, Close prices to the preview
 coin_details_df = pd.concat([coin_details_df, coin_data[['Open', 'High', 'Low', 'Close']].tail(5)], axis=1)
@@ -138,7 +142,7 @@ st.markdown("---")
 
 # Create candlestick chart
 candlestick = go.Figure(data=[go.Candlestick(
-    x=coin_data.index,
+    x=coin_data['Date'],
     open=coin_data["Open"],
     high=coin_data["High"],
     low=coin_data["Low"],
@@ -148,7 +152,7 @@ candlestick = go.Figure(data=[go.Candlestick(
 # Customize chart layout
 candlestick.update_layout(
     title={
-        'text': f"{selected_ticker} Candlestick Chart",
+        'text': f"{selected_coin['ticker']} Candlestick Chart",
         'y': 0.9,
         'x': 0.5,
         'xanchor': 'center',
@@ -156,7 +160,7 @@ candlestick.update_layout(
     }
 )
 
-candlestick.update_yaxes(title_text=f"{selected_ticker} Price")
+candlestick.update_yaxes(title_text=f"{selected_coin['ticker']} Price")
 
 # Display the chart in Streamlit
 st.plotly_chart(candlestick)
@@ -174,3 +178,4 @@ coin_history = {
 # Display the coin's history
 st.subheader("Coin History")
 st.write(coin_history[selected_coin['ticker']])
+
