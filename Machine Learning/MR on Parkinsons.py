@@ -64,7 +64,45 @@ It provides **interactive visualizations, predictions, and model performance met
 st.markdown("---")
 
 #--------------------------------------------------------------------
-# Step 3: Sidebar - User Inputs for Prediction
+# Step 3: About the Dataset
+#--------------------------------------------------------------------
+
+st.header("📜 About the Dataset")
+
+st.write("""
+The **Parkinson’s Telemonitoring Dataset** is used to monitor the progression of **Parkinson’s disease**  
+based on **biomedical voice measurements**. It is a **regression dataset** where the goal is to predict  
+the **severity of the disease** using these features.
+
+📌 **Dataset Sources:**
+- 🔗 [UCI Machine Learning Repository](https://archive.ics.uci.edu/dataset/189/parkinsons+telemonitoring)
+- 🔗 [GitHub Dataset Link](https://github.com/DRALVINANG/Machine-Learning-with-Python-Training/blob/main/Multiple%20Regression/Parkinsons.csv)
+
+📌 **Key Features:**
+- **Jitter(%)**: Measures variation in frequency, capturing frequency instability.
+- **Jitter (Abs, RAP, PPQ5, DDP)**: Different calculations of jitter representing irregularities in vocal frequency.
+- **Shimmer**: Measures **variation in amplitude**, showing fluctuations in loudness.
+- **Shimmer (dB, APQ3, APQ5, APQ11, DDA)**: Different variations of shimmer capturing amplitude instability.
+- **NHR (Noise-to-Harmonics Ratio)**: Indicates **the level of noise** in the voice relative to vocal sound.
+- **HNR (Harmonics-to-Noise Ratio)**: Measures **voice clarity**, representing the balance of harmonic sounds and noise.
+- **RPDE (Recurrence Period Density Entropy)**: A **nonlinear dynamic feature** that measures **unpredictability** in the voice signal.
+- **DFA (Detrended Fluctuation Analysis)**: Analyzes the **self-similarity** of voice signals over time.
+- **PPE (Pitch Period Entropy)**: Measures **pitch variability**, showing how much the pitch period changes over time.
+
+📌 **Target Variables (What We Predict):**
+- **Motor UPDRS**: A score reflecting the severity of motor-related symptoms in Parkinson’s disease.
+- **Total UPDRS**: A score reflecting **overall disease severity**, including both **motor and non-motor** symptoms.
+
+📌 **How These Features Affect Disease Severity:**
+- **Higher jitter, shimmer, and NHR** → **More severe Parkinson’s disease**
+- **Lower HNR and higher RPDE** → **Less vocal clarity, indicating disease progression**
+- **Higher DFA & PPE** → **More irregularity in voice, linked to severe cases**
+""")
+
+st.markdown("---")
+
+#--------------------------------------------------------------------
+# Step 4: Sidebar - User Inputs for Prediction
 #--------------------------------------------------------------------
 
 st.sidebar.header("🎛️ Input Features for Prediction")
@@ -77,7 +115,7 @@ rpde = st.sidebar.slider("🌀 Recurrence Period Density Entropy (RPDE)", 0.0, 1
 dfa = st.sidebar.slider("🔬 Detrended Fluctuation Analysis (DFA)", 0.0, 1.0, 0.6, step=0.01)
 ppe = st.sidebar.slider("🎤 Pitch Period Entropy (PPE)", 0.0, 1.0, 0.2, step=0.01)
 
-# Function to Predict UPDRS Score
+# Prediction Function
 def predict_updrs(jitter, shimmer, nhr, hnr, rpde, dfa, ppe):
     input_features = pd.DataFrame([[jitter, shimmer, nhr, hnr, rpde, dfa, ppe]], columns=selected_features)
     predicted_score = model.predict(input_features)[0]
@@ -88,26 +126,6 @@ if st.sidebar.button("🔮 Predict"):
     predicted_updrs = predict_updrs(jitter, shimmer, nhr, hnr, rpde, dfa, ppe)
     st.sidebar.success(f"✅ Predicted Total UPDRS: **{predicted_updrs:.2f}**")
 
-#--------------------------------------------------------------------
-# Step 4: Dataset Overview
-#--------------------------------------------------------------------
-
-st.header("📂 About the Dataset")
-
-st.write("""
-The **Parkinson’s Telemonitoring Dataset** provides biomedical voice measurements for tracking disease progression.
-
-**Features include:**
-- **Jitter(%), Shimmer:** Measures of frequency and amplitude variation.
-- **NHR, HNR:** Noise-to-harmonics ratios indicating vocal clarity.
-- **RPDE, DFA, PPE:** Measures of voice signal unpredictability and variability.
-""")
-
-st.subheader("🔍 Dataset Preview")
-st.dataframe(data.head())
-
-st.markdown("[📥 Download Dataset](https://raw.githubusercontent.com/DRALVINANG/Machine-Learning-with-Python-Training/refs/heads/main/Multiple%20Regression/Parkinsons.csv)")
-
 st.markdown("---")
 
 #--------------------------------------------------------------------
@@ -116,12 +134,7 @@ st.markdown("---")
 
 st.header("📊 Data Visualizations")
 
-# Pair Plot
-st.subheader("🔗 Pair Plot")
-pairplot_fig = sns.pairplot(data[selected_features + ['total_UPDRS']])
-st.pyplot(pairplot_fig.fig)
-
-# Correlation Heatmap (Fixed - No Annotations)
+# Correlation Heatmap
 st.subheader("🔥 Correlation Heatmap")
 fig, ax = plt.subplots(figsize=(8, 6))
 sns.heatmap(data.corr(), annot=False, cmap="coolwarm", fmt=".2f", ax=ax)  # annot=False for clarity
@@ -134,36 +147,18 @@ st.markdown("---")
 #--------------------------------------------------------------------
 
 st.header("📌 Model Performance")
+st.metric("📉 R² Score", f"{r2:.2f}")
+st.metric("📊 Mean Squared Error (MSE)", f"{mse:.2f}")
 
-col1, col2 = st.columns(2)
-
-with col1:
-    st.metric("📉 R² Score", f"{r2:.2f}", help="Measures how well the model fits the data.")
-with col2:
-    st.metric("📊 Mean Squared Error (MSE)", f"{mse:.2f}", help="Measures prediction accuracy (lower is better).")
-
+# Residual Plot
 st.subheader("📊 Residual Plot (Actual vs Predicted)")
 residuals = y_test - y_pred
 fig, ax = plt.subplots(figsize=(6, 4))
 sns.scatterplot(x=y_test, y=residuals, ax=ax)
 ax.axhline(0, color="red", linestyle="--", linewidth=1)
-ax.set_xlabel("Actual Total UPDRS")
-ax.set_ylabel("Residuals")
 st.pyplot(fig)
 
 st.markdown("---")
 
-#--------------------------------------------------------------------
-# Step 7: Instructions for Users
-#--------------------------------------------------------------------
-
-st.header("📌 How to Use This App")
-st.write("""
-1. Adjust the **biomedical voice measurement sliders** in the sidebar.
-2. Click **Predict** to get the estimated **Total UPDRS score**.
-3. View the **R² Score & MSE** to understand model performance.
-4. Check the **Residual Plot** for error distribution insights.
-""")
-
-st.markdown("**Created by:** Dr. Alvin Ang")
+st.markdown("**Developed by:** Dr. Alvin Ang")
 
