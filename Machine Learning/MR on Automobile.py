@@ -42,7 +42,31 @@ It includes visualizations and performance metrics to understand the model's beh
 st.markdown("---")
 
 #--------------------------------------------------------------------
-# Step 2: Display Dataset
+# Step 2: Dataset Description
+#--------------------------------------------------------------------
+st.subheader("📖 About the Dataset")
+
+st.markdown("""
+The **Automobile Dataset** from the **UCI Machine Learning Repository** provides data for predicting the price of different types of cars based on their attributes.
+The dataset contains **26 features** related to various characteristics of automobiles.
+
+**Key Features Used in Prediction:**
+- **Horsepower:** Engine power in horsepower (hp), indicating the performance of the vehicle.
+- **Curb Weight:** Weight of the car without passengers or cargo (lbs).
+- **Engine Size:** Volume of the engine in cubic centimeters (cc), affecting power output and efficiency.
+- **Highway MPG:** Fuel efficiency of the car on highways (miles per gallon, mpg).
+- **Price (Target Variable):** The price of the car in dollars, which we aim to predict.
+
+For more details, visit:
+- [UCI Automobile Dataset](https://archive.ics.uci.edu/dataset/10/automobile)
+- [Original Dataset](https://github.com/DRALVINANG/Machine-Learning-with-Python-Training/blob/main/Linear%20Regression/Automobile.csv)
+- [Cleaned Dataset](https://www.alvinang.sg/s/automobileEDA.csv)
+""")
+
+st.markdown("---")
+
+#--------------------------------------------------------------------
+# Step 3: Display Dataset
 #--------------------------------------------------------------------
 st.subheader("📊 Dataset Preview")
 st.write(df.head())
@@ -51,7 +75,7 @@ st.markdown("[📥 Download Dataset](https://www.alvinang.sg/s/automobileEDA.csv
 st.markdown("---")
 
 #--------------------------------------------------------------------
-# Step 3: Data Visualization
+# Step 4: Data Visualization
 #--------------------------------------------------------------------
 st.subheader("📈 Visualize Relationships")
 
@@ -67,7 +91,7 @@ st.pyplot(fig)
 st.markdown("---")
 
 #--------------------------------------------------------------------
-# Step 4: Prediction Model
+# Step 5: Prediction Model
 #--------------------------------------------------------------------
 st.subheader("🔮 Predict Automobile Prices")
 
@@ -114,29 +138,4 @@ if st.button("Predict and Visualize"):
 
 st.markdown("---")
 
-st.markdown("""
-### How to Use This App:
-1. Adjust the sliders for **horsepower, curb weight, engine size, and highway-mpg**.
-2. Click **Predict and Visualize** to see:
-   - The **predicted price** of the car.
-   - **R² Score (R-squared)**: Indicates how well the model fits the data.
-   - **Mean Squared Error (MSE)**: Measures model error.
-3. View **Actual vs Predicted Plot** and **Residual Plot** for model evaluation.
-
-**Performance Guidelines:**
-- **R² Score:**
-  - > 0.9: Excellent Fit
-  - 0.7 - 0.9: Acceptable Fit
-  - ≤ 0.7: Poor Fit
-- **MSE:**
-  - ≤ 1e6: Good Fit
-  - > 1e6: Poor Fit
-""")
-
-st.markdown("---")
-
-#--------------------------------------------------------------------
-# End of App
-#--------------------------------------------------------------------
 st.success("🎉 App Successfully Loaded! Adjust the sliders to start predicting.")
-
