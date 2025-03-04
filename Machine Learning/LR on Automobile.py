@@ -32,6 +32,7 @@ mse = mean_squared_error(y, lm.predict(X))
 #--------------------------------------------------------------------
 # Streamlit App
 #--------------------------------------------------------------------
+
 st.title("🚗 Automobile Price Prediction Based on Highway-MPG")
 
 st.markdown("""
@@ -45,7 +46,54 @@ It includes visualizations and performance metrics to understand the model's beh
 st.markdown("---")
 
 #--------------------------------------------------------------------
-# Step 2: Display Dataset
+# Step 2: About the Dataset
+#--------------------------------------------------------------------
+
+st.header("📜 About the Dataset")
+
+st.write("""
+The **Automobile Dataset** from the **UCI Machine Learning Repository** provides data for predicting the price of cars based on various attributes.  
+This dataset contains **26 features** that capture different **vehicle characteristics** that influence the car's price.
+
+📌 **Dataset Sources:**
+- 🔗 [UCI Machine Learning Repository](https://archive.ics.uci.edu/dataset/10/automobile)
+- 🔗 [GitHub Dataset Link](https://github.com/DRALVINANG/Machine-Learning-with-Python-Training/blob/main/Linear%20Regression/Automobile.csv)
+- 🔗 [Cleansed Dataset (Used in This App)](https://www.alvinang.sg/s/automobileEDA.csv)
+
+📌 **Key Features:**
+- **Symboling**: A categorical measure of insurance risk (-3 to +3, with higher values being riskier).
+- **Normalized Losses**: Relative average loss payment per insured vehicle.
+- **Make**: The manufacturer of the car (e.g., Toyota, BMW).
+- **Fuel Type**: Type of fuel used (e.g., gas, diesel).
+- **Aspiration**: Indicates whether the engine is **turbocharged** or **standard**.
+- **Number of Doors**: Whether the car has **2 or 4 doors**.
+- **Body Style**: Type of car (sedan, hatchback, convertible, etc.).
+- **Drive Wheels**: Drive type (front-wheel drive, rear-wheel drive, or four-wheel drive).
+- **Engine Location**: Where the engine is placed (front or rear).
+- **Wheelbase, Length, Width, Height**: Physical dimensions of the car.
+- **Curb Weight**: Weight of the car without passengers or cargo.
+- **Engine Type**: Configuration of the engine (inline, V-type, etc.).
+- **Number of Cylinders**: Number of cylinders in the engine.
+- **Engine Size**: Engine displacement volume in cubic centimeters (cc).
+- **Fuel System**: Type of fuel system (e.g., multi-point fuel injection, 2-barrel carburetor).
+- **Bore & Stroke**: Dimensions of the engine cylinder.
+- **Compression Ratio**: Ratio of the engine's cylinder volume at the beginning and end of the compression stroke.
+- **Horsepower**: The power output of the engine.
+- **Peak RPM**: Maximum revolutions per minute of the engine.
+- **City MPG & Highway MPG**: Fuel efficiency in city and highway driving conditions.
+- **Price**: **Target variable**—car price in dollars.
+
+📌 **How These Features Affect Price:**
+- **Higher horsepower and engine size** → 🚗 **Higher Price**
+- **Luxury brands (Make)** → 🚗 **Higher Price**
+- **Fuel efficiency (Highway MPG, City MPG)** → 🚗 **Lower Price**
+- **Compact cars with small engines** → 🚗 **More affordable**
+""")
+
+st.markdown("---")
+
+#--------------------------------------------------------------------
+# Step 3: Display Dataset
 #--------------------------------------------------------------------
 st.subheader("📊 Dataset Preview")
 st.write(df.head())
@@ -54,7 +102,7 @@ st.markdown("[📥 Download Dataset](https://www.alvinang.sg/s/automobileEDA.csv
 st.markdown("---")
 
 #--------------------------------------------------------------------
-# Step 3: Data Visualization
+# Step 4: Data Visualization
 #--------------------------------------------------------------------
 st.subheader("📈 Visualize Relationships")
 st.markdown("""
@@ -74,7 +122,7 @@ st.pyplot(fig)
 st.markdown("---")
 
 #--------------------------------------------------------------------
-# Step 4: Prediction Model
+# Step 5: Prediction Model
 #--------------------------------------------------------------------
 st.subheader("🔮 Predict Car Price Based on Highway-MPG")
 highway_mpg = st.slider("Select Highway MPG:", min_value=int(X.min()), max_value=int(X.max()), value=30)
@@ -127,3 +175,4 @@ st.markdown("---")
 # End of App
 #--------------------------------------------------------------------
 st.success("🎉 App Successfully Loaded! Adjust the slider to start predicting.")
+
