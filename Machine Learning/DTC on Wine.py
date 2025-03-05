@@ -46,10 +46,51 @@ def main():
     y = wine_df["target"]
     X = wine_df[["alcohol", "flavanoids", "color_intensity"]]
 
-    # Step 2: Train Decision Tree Classifier
+    # Step 2: Pair Plot
+    st.header("📊 Pair Plot")
+    st.write("""
+    - The pair plot shows the relationships between pairs of features (e.g., Alcohol vs. Flavonoids) and how they relate to the target variable (Wine Class).
+    - Each feature is compared to every other feature in a matrix of scatterplots.
+    - The diagonal line plots the distribution of each feature.
+    """)
+    
+    fig = sns.pairplot(wine_df[["alcohol", "flavanoids", "color_intensity", "target"]], hue="target")
+    st.pyplot(fig)
+
+    st.write("""
+    **Observations from the Pair Plot**:
+    - **Alcohol vs Flavonoids**: The scatter plot shows some separation between Wine Class 1 and Class 3. There is a weak positive correlation, but overlap between Wine Class 1 and Class 2 suggests that alcohol and flavanoids are not perfectly discriminating features.
+    - **Alcohol vs Color Intensity**: There’s a weak positive correlation between alcohol and color intensity. Wine Class 2 and Class 3 seem more separated than Class 1, which indicates that while color intensity and alcohol may have some relationship, they are not strong discriminators by themselves.
+    - **Flavonoids vs Color Intensity**: There’s little to no separation between the wine classes in this scatter plot. The overlap between all classes suggests that these features are not very useful for distinguishing between wine classes.
+    """)
+
+    st.write("---")  # Separator line
+
+    # Step 3: Correlation Heatmap
+    st.header("🔥 Correlation Heatmap")
+    st.write("""
+    - The correlation heatmap shows the relationships between pairs of features.
+    - The colors represent the strength of the correlation: blue for positive, red for negative.
+    - Strong correlations (near 1 or -1) indicate that the features are strongly related.
+    """)
+    
+    fig, ax = plt.subplots(figsize=(8, 6))
+    sns.heatmap(wine_df[["alcohol", "flavanoids", "color_intensity"]].corr(), annot=True, cmap="coolwarm", fmt=".2f", ax=ax)
+    st.pyplot(fig)
+
+    st.write("""
+    **Observations from the Correlation Heatmap**:
+    - **Alcohol vs Flavonoids**: There is a weak positive correlation (**0.24**) between alcohol and flavanoids, indicating a slight relationship between these two features.
+    - **Alcohol vs Color Intensity**: The correlation (**0.55**) between alcohol and color intensity is moderate, showing a moderate positive relationship, where wines with higher alcohol content tend to have higher color intensity.
+    - **Flavonoids vs Color Intensity**: The correlation (**-0.17**) is weak and negative, suggesting that as flavanoids increase, color intensity slightly decreases, but the relationship is not strong.
+    """)
+
+    st.write("---")  # Separator line
+
+    # Step 4: Train Decision Tree Classifier
     dtc = train_classifier(X, y)
 
-    # Step 3: Rank the Feature Importance Scores and Visualize
+    # Step 5: Rank the Feature Importance Scores and Visualize
     feature_importances_df = pd.DataFrame({
         "Feature": X.columns,
         "Importance": dtc.feature_importances_
@@ -80,15 +121,16 @@ def main():
     st.pyplot(fig)
 
     st.write("""
-    - This bar plot shows the importance of each feature in predicting the target variable. The height of the bars represents the 
-      strength of the relationship between the feature and the target.
-    - The **0.95 threshold line** shows which features have a significant impact on predicting the target variable.
-      Features that cross the 0.95 line are considered **significant** in prediction, while features below this threshold are less influential.
+    **Observations from the Feature Importance Chart**:
+    - All feature importance scores are below **0.95**, meaning none of the features have an extremely dominant impact on the classification decision.
+    - The **Flavonoids** feature has the highest importance at **0.39**, followed by **Alcohol** at **0.33**, and **Color Intensity** at **0.28**.
+    - While none of the features are "extremely significant" (i.e., they don’t surpass the **0.95** threshold), they all contribute to the classification. In real-world scenarios, even relatively modest importance scores can be valuable when combined.
+    - The absence of any feature surpassing the **0.95** threshold doesn’t necessarily mean that the features are insignificant. It simply indicates that no single feature overwhelmingly determines the class of the wine, and a combination of features is necessary for accurate classification.
     """)
 
     st.write("---")  # Separator line
 
-    # Step 4: Visualize the Decision Tree
+    # Step 6: Visualize the Decision Tree
     st.subheader('Visualizing the Decision Tree')
 
     # Convert class names to strings (fix for the TypeError)
@@ -116,7 +158,7 @@ def main():
 
     # Sidebar for interactive input and predictions
     with st.sidebar:
-        # Step 5: Model Testing and Accuracy Score
+        # Step 7: Model Testing and Accuracy Score
         # Split the data into training and test sets
         X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
 
@@ -138,7 +180,7 @@ def main():
 
         st.write("---")  # Separator line
 
-        # Step 6: Simulate Prediction with New Data using Sliders
+        # Step 8: Simulate Prediction with New Data using Sliders
         st.subheader('Simulated Prediction with User Inputs')
 
         # Create sliders for user input
