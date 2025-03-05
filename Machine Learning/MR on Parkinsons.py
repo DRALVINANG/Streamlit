@@ -5,6 +5,7 @@ import seaborn as sns
 from sklearn.linear_model import LinearRegression
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import r2_score, mean_squared_error
+import statsmodels.api as sm
 
 #--------------------------------------------------------------------
 # Step 1: Load Dataset
@@ -126,10 +127,34 @@ if st.sidebar.button("🔮 Predict"):
     predicted_updrs = predict_updrs(jitter, shimmer, nhr, hnr, rpde, dfa, ppe)
     st.sidebar.success(f"✅ Predicted Total UPDRS: **{predicted_updrs:.2f}**")
 
+# Add a horizontal line to segment the prediction and model performance
+st.sidebar.markdown("---")
+
+#--------------------------------------------------------------------
+# Step 5: Model Performance
+#--------------------------------------------------------------------
+
+st.sidebar.header("📊 Model Performance")
+
+# Model Performance Metrics
+st.sidebar.metric("📉 R² Score", f"{r2:.2f}")
+st.sidebar.metric("📊 Mean Squared Error (MSE)", f"{mse:.2f}")
+
+# Provide a description of R² and MSE
+st.sidebar.write("""
+**R² Score**:
+- R² represents the proportion of variance in the target variable that can be explained by the model.
+- **A good R² score** is generally **above 0.7**. A score close to **1** indicates that the model fits the data well, while **below 0.3** indicates a poor fit.
+
+**Mean Squared Error (MSE)**:
+- MSE measures the average squared difference between actual and predicted values. **Lower values** indicate better model performance.
+- **Good MSE** values are **closer to 0**.
+""")
+
 st.markdown("---")
 
 #--------------------------------------------------------------------
-# Step 5: Generate Visualizations
+# Step 6: Generate Visualizations
 #--------------------------------------------------------------------
 
 st.header("📊 Data Visualizations")
@@ -140,25 +165,90 @@ fig, ax = plt.subplots(figsize=(8, 6))
 sns.heatmap(data.corr(), annot=False, cmap="coolwarm", fmt=".2f", ax=ax)  # annot=False for clarity
 st.pyplot(fig)
 
+st.markdown("""
+**Correlation Heatmap Description:**
+- **Jitter(%) and Total UPDRS** have a moderate positive correlation, meaning higher jitter is linked to more severe Parkinson's disease.
+- **Shimmer and Total UPDRS** show a significant positive relationship, indicating higher shimmer values correspond to greater severity.
+- **RPDE and Total UPDRS** have a moderate positive correlation, showing the irregularity of the voice signal increases with the disease progression.
+""")
+
 st.markdown("---")
 
 #--------------------------------------------------------------------
-# Step 6: Model Performance & Residual Plot
+# Step 7: Feature Importance using MR
+#--------------------------------------------------------------------
+st.subheader("🔍 Feature Importance using Multiple Regression")
+
+# Add constant to the features for OLS regression
+X_ols = sm.add_constant(X)
+
+# Fit OLS Model
+ols_model = sm.OLS(y, X_ols).fit()
+
+# Extract p-values from the OLS model
+p_values = ols_model.pvalues[1:]  # exclude constant
+p_values_sorted = p_values.sort_values(ascending=True)
+
+# Create a bar plot of 1 - P-value for feature importance
+fig, ax = plt.subplots(figsize=(5, 5))
+sns.barplot(x=1 - p_values_sorted, y=p_values_sorted.index, palette='Set2', ax=ax)
+
+# Add a red dashed line for the 0.95 threshold
+plt.axvline(x=0.95, color='r', linestyle='dotted')
+
+# Annotate the threshold
+plt.annotate('0.95', xy=(0.95, 2.5), xycoords='data', color='r')
+
+# Add labels and title
+plt.xlabel('Feature Importance Score')
+plt.ylabel('Features')
+plt.title('Visualizing Important Features using Multiple Regression')
+st.pyplot(fig)
+
+st.markdown("""
+### 📊 Feature Importance Plot
+This chart visualizes the importance of each feature in predicting the target variable (Total UPDRS) using Ordinary Least Squares (OLS) regression. The bars represent the feature importance scores, derived from the p-values. A **larger score** indicates that the feature has a **stronger and more statistically significant relationship** with the target variable.
+
+The **red dashed line at 0.95** represents the typical significance threshold. Features with **scores above 0.95** are considered **significant**, indicating they have a strong relationship with the target variable, and thus are more important in predicting disease severity. Features with scores **below 0.95** have a weaker influence on disease progression and may not be as important for the model's prediction.
+""")
+
+st.markdown("---")
+
+#--------------------------------------------------------------------
+# Step 8: Residual Plot (Actual vs Predicted)
 #--------------------------------------------------------------------
 
-st.header("📌 Model Performance")
-st.metric("📉 R² Score", f"{r2:.2f}")
-st.metric("📊 Mean Squared Error (MSE)", f"{mse:.2f}")
+st.header("📊 Residual Plot (Actual vs Predicted)")
 
-# Residual Plot
-st.subheader("📊 Residual Plot (Actual vs Predicted)")
 residuals = y_test - y_pred
 fig, ax = plt.subplots(figsize=(6, 4))
 sns.scatterplot(x=y_test, y=residuals, ax=ax)
 ax.axhline(0, color="red", linestyle="--", linewidth=1)
 st.pyplot(fig)
 
+st.markdown("""
+**Residual Plot Description:**
+- The residual plot shows the **errors between actual and predicted values**.
+- The **red dashed line** represents the **ideal model**, where there are no residuals (errors).
+- **If the points are randomly spread around the red line**, the model is likely a good fit.
+- **If the points show a pattern**, such as clustering or a clear trend, it indicates that the model does not fit well, and **Multiple Regression (MR)** may not be the best model for this dataset.
+""")
+
 st.markdown("---")
 
-st.markdown("**Developed by:** Dr. Alvin Ang")
+#--------------------------------------------------------------------
+# Step 9: How to Use the App
+#--------------------------------------------------------------------
+
+st.markdown("### 📌 How to Use This App")
+st.write("""
+1. Adjust the **features** (jitter, shimmer, NHR, HNR, RPDE, DFA, PPE) using the sliders in the sidebar.
+2. Click on **Predict** to calculate the **predicted UPDRS score** for the disease progression.
+3. View **data visualizations** (correlation heatmap, feature importance) and **model performance metrics**.
+""")
+
+# Add a horizontal line to indicate the end of the app
+st.markdown("---")
+st.markdown("**THE END**")
+st.markdown("© Dr. Alvin Ang")
 
