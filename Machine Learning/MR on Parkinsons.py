@@ -175,7 +175,24 @@ st.markdown("""
 st.markdown("---")
 
 #--------------------------------------------------------------------
-# Step 7: Feature Importance using MR
+# Step 7: Correlation Heatmap
+#--------------------------------------------------------------------
+st.subheader("🔥 Correlation Heatmap")
+fig, ax = plt.subplots(figsize=(8, 6))
+sns.heatmap(data.corr(), annot=False, cmap="coolwarm", fmt=".2f", ax=ax)  # annot=False for clarity
+st.pyplot(fig)
+
+st.markdown("""
+**Correlation Heatmap Description:**
+- **Jitter(%) and Total UPDRS** have a moderate positive correlation, meaning higher jitter is linked to more severe Parkinson's disease.
+- **Shimmer and Total UPDRS** show a significant positive relationship, indicating higher shimmer values correspond to greater severity.
+- **RPDE and Total UPDRS** have a moderate positive correlation, showing the irregularity of the voice signal increases with the disease progression.
+""")
+
+st.markdown("---")
+
+#--------------------------------------------------------------------
+# Step 8: Feature Importance using MR
 #--------------------------------------------------------------------
 st.subheader("🔍 Feature Importance using Multiple Regression")
 
@@ -215,7 +232,7 @@ The **red dashed line at 0.95** represents the typical significance threshold. F
 st.markdown("---")
 
 #--------------------------------------------------------------------
-# Step 8: Residual Plot (Actual vs Predicted)
+# Step 9: Residual Plot (Actual vs Predicted)
 #--------------------------------------------------------------------
 
 st.header("📊 Residual Plot (Actual vs Predicted)")
@@ -237,7 +254,7 @@ st.markdown("""
 st.markdown("---")
 
 #--------------------------------------------------------------------
-# Step 9: How to Use the App
+# Step 10: How to Use the App
 #--------------------------------------------------------------------
 
 st.markdown("### 📌 How to Use This App")
