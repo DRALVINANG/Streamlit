@@ -38,6 +38,9 @@ tv_budget = st.sidebar.slider("📺 TV Budget", 0, 500, 100, 10)
 radio_budget = st.sidebar.slider("📻 Radio Budget", 0, 500, 50, 10)
 newspaper_budget = st.sidebar.slider("📰 Newspaper Budget", 0, 500, 20, 10)
 
+# Add a horizontal line to segment the sidebar
+st.sidebar.markdown("---")
+
 #--------------------------------------------------------------------
 # Step 3: Model Training & Prediction
 #--------------------------------------------------------------------
@@ -90,6 +93,9 @@ st.write("""
 **Objective:** This app predicts sales based on TV, Radio, and Newspaper advertising budgets using Multiple Linear Regression.
 """)
 
+# Add a horizontal line to segment the objective and dataset preview
+st.markdown("---")
+
 st.markdown("### 📂 Dataset Preview")
 st.dataframe(advert.head())
 
@@ -126,6 +132,9 @@ The pair plot shows the relationships between each pair of features. Notably:
 - **Newspaper and Sales** show a weaker positive relationship, indicating that newspaper advertising does not have as significant an impact on sales.
 - The diagonal histograms represent the distribution of each feature.
 """)
+
+# Add a horizontal line to separate pair plot and correlation heatmap
+st.markdown("---")
 
 #--------------------------------------------------------------------
 # Correlation Heatmap with Description
@@ -205,4 +214,8 @@ st.write("""
 3. View **data visualizations** and model insights.
 """)
 
-st.markdown("**Created by:** Dr. Alvin Ang")
+# Add a horizontal line to indicate the end of the app
+st.markdown("---")
+st.markdown("**THE END**")
+st.markdown("© Dr. Alvin Ang")
+
