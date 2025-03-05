@@ -159,17 +159,17 @@ st.markdown("---")
 
 st.header("📊 Data Visualizations")
 
-# Correlation Heatmap
-st.subheader("🔥 Correlation Heatmap")
-fig, ax = plt.subplots(figsize=(8, 6))
-sns.heatmap(data.corr(), annot=False, cmap="coolwarm", fmt=".2f", ax=ax)  # annot=False for clarity
+# **Pair Plot** for selected features
+st.subheader("🔗 Pair Plot for Selected Features")
+fig = sns.pairplot(data[selected_features + ['total_UPDRS']])
 st.pyplot(fig)
 
 st.markdown("""
-**Correlation Heatmap Description:**
-- **Jitter(%) and Total UPDRS** have a moderate positive correlation, meaning higher jitter is linked to more severe Parkinson's disease.
-- **Shimmer and Total UPDRS** show a significant positive relationship, indicating higher shimmer values correspond to greater severity.
-- **RPDE and Total UPDRS** have a moderate positive correlation, showing the irregularity of the voice signal increases with the disease progression.
+**Pair Plot Description:**
+- The pair plot shows the relationships between pairs of features (e.g., Jitter(%) vs. Shimmer, RPDE vs. NHR) and how they relate to the target variable (Total UPDRS).
+- **Jitter(%) and Shimmer** show a potential positive correlation with **Total UPDRS**.
+- **RPDE and NHR** also seem to show a positive relationship with **Total UPDRS**, indicating that higher values of RPDE and NHR could be linked to more severe disease progression.
+- **Total UPDRS** is visualized on the diagonal, showing the distribution of the target variable.
 """)
 
 st.markdown("---")
