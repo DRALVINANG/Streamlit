@@ -167,6 +167,15 @@ plt.ylabel("Predicted Sales")
 plt.legend()
 st.pyplot(fig)
 
+# Brief description of the regression plot
+st.markdown("""
+### 📊 Regression Plot (Actual vs Predicted Sales)
+This plot compares the **actual sales** (on the x-axis) with the **predicted sales** (on the y-axis) from our model. Here’s what we can infer:
+- **Points along the red line** represent perfect predictions, where the predicted sales are exactly equal to the actual sales.
+- **Clusters of points** that are far from the red line indicate areas where the model has made significant errors in its predictions.
+- The **closer the points are to the red line**, the better the model is at predicting sales.
+""")
+
 st.markdown("---")
 
 #--------------------------------------------------------------------
