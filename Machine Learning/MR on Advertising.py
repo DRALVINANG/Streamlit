@@ -5,6 +5,7 @@ import seaborn as sns
 from sklearn.linear_model import LinearRegression
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import r2_score, mean_squared_error
+import statsmodels.api as sm
 
 #--------------------------------------------------------------------
 # Step 1: Load Dataset
@@ -66,7 +67,21 @@ r2_feedback = "Excellent Fit" if r2_value > 0.9 else "Acceptable Fit" if r2_valu
 mse_feedback = "Good Fit" if mse_value <= 10 else "Moderate Fit" if mse_value <= 100 else "Poor Fit"
 
 #--------------------------------------------------------------------
-# Step 4: Streamlit Page Layout
+# Step 4: OLS Model for Feature Importance
+#--------------------------------------------------------------------
+
+# Add constant to the features for OLS regression
+X_ols = sm.add_constant(X)
+
+# Fit OLS Model
+ols_model = sm.OLS(y, X_ols).fit()
+
+# Extract p-values from the OLS model
+p_values = ols_model.pvalues[1:]  # exclude constant
+p_values_sorted = p_values.sort_values(ascending=True)
+
+#--------------------------------------------------------------------
+# Step 5: Streamlit Page Layout
 #--------------------------------------------------------------------
 
 st.title("📊 Advertising Budget vs Sales - Multiple Linear Regression")
@@ -83,37 +98,55 @@ st.markdown("[📥 Download the Dataset](https://www.alvinang.sg/s/Advertising.c
 st.markdown("---")
 
 #--------------------------------------------------------------------
-# Step 5: Generate Visualizations
+# Step 6: Visualizations and Prediction Results
+#--------------------------------------------------------------------
+
+# Place Prediction Results in Sidebar
+st.sidebar.subheader("🔮 Prediction Results and Model Performance")
+st.sidebar.metric(label="📊 Predicted Sales (Units)", value=f"{predicted_sales:.2f}")
+st.sidebar.metric("📉 R-squared", f"{r2_value:.2f}", help=f"Model Fit: {r2_feedback}")
+st.sidebar.metric("📊 Mean Squared Error (MSE)", f"{mse_value:.2f}", help=f"Error Level: {mse_feedback}")
+
+#--------------------------------------------------------------------
+# Pair Plot with Description
 #--------------------------------------------------------------------
 
 st.subheader("📈 Data Visualizations")
 
-# Pair Plot Fix
+# Pair Plot
 st.markdown("#### 🔗 Pair Plot")
 fig = sns.pairplot(advert)
 st.pyplot(fig.fig)
 
-# Correlation Heatmap
+st.markdown("""
+**Pair Plot Description:**
+The pair plot shows the relationships between each pair of features. Notably:
+- **TV and Sales** show a strong positive correlation, meaning that higher TV advertising budgets tend to increase sales.
+- **Radio and Sales** also show a positive correlation, though not as strong as with TV.
+- **Newspaper and Sales** show a weaker positive relationship, indicating that newspaper advertising does not have as significant an impact on sales.
+- The diagonal histograms represent the distribution of each feature.
+""")
+
+#--------------------------------------------------------------------
+# Correlation Heatmap with Description
+#--------------------------------------------------------------------
+
 st.markdown("#### 🔥 Correlation Heatmap")
+advert_clean = advert.drop(columns=['Unnamed: 0'])  # Remove the unnecessary column
 fig, ax = plt.subplots(figsize=(5, 5))
-sns.heatmap(advert.corr(), annot=True, cmap="coolwarm", fmt=".2f")
+sns.heatmap(advert_clean.corr(), annot=True, cmap="coolwarm", fmt=".2f")
 plt.title("Correlation Heatmap")
 st.pyplot(fig)
 
+st.markdown("""
+**Correlation Heatmap Description:**
+The heatmap illustrates the pairwise correlations between the features in the dataset:
+- **TV and Sales** have a strong positive correlation of **0.90**, meaning that TV advertising has a high impact on sales.
+- **Radio and Sales** have a positive correlation of **0.35**, showing a moderate relationship.
+- **Newspaper and Sales** have a lower positive correlation of **0.20**, suggesting that the newspaper budget has a smaller effect on sales.
+""")
+
 st.markdown("---")
-
-#--------------------------------------------------------------------
-# Step 6: Display Prediction Results
-#--------------------------------------------------------------------
-
-st.subheader("🔮 Predicted Sales and Model Performance")
-
-st.metric(label="📊 Predicted Sales (Units)", value=f"{predicted_sales:.2f}")
-
-st.markdown("### 📌 Model Performance")
-col1, col2 = st.columns(2)
-col1.metric("📉 R-squared", f"{r2_value:.2f}", help=f"Model Fit: {r2_feedback}")
-col2.metric("📊 Mean Squared Error (MSE)", f"{mse_value:.2f}", help=f"Error Level: {mse_feedback}")
 
 # Regression Plot
 st.markdown("### 📊 Regression Plot (Actual vs Predicted Sales)")
@@ -127,6 +160,42 @@ st.pyplot(fig)
 
 st.markdown("---")
 
+#--------------------------------------------------------------------
+# Step 7: Feature Importance Visualization
+#--------------------------------------------------------------------
+
+st.subheader("🔍 Feature Importance Analysis")
+
+# Create a bar plot of 1 - P-value for feature importance
+fig, ax = plt.subplots(figsize=(5, 5))
+sns.barplot(x=1 - p_values_sorted, y=p_values_sorted.index, palette='Set2', ax=ax)
+
+# Add a red dashed line for the 0.95 threshold
+plt.axvline(x=0.95, color='r', linestyle='dotted')
+
+# Annotate the threshold
+plt.annotate('0.95', xy=(0.95, 2.5), xycoords='data', color='r')
+
+# Add labels and title
+plt.xlabel('Feature Importance Score')
+plt.ylabel('Features')
+plt.title('Visualizing Important Features using Multiple Regression')
+st.pyplot(fig)
+
+# Brief description of the feature importance plot
+st.markdown("""
+### 📊 Feature Importance Plot
+This chart visualizes the importance of each feature in predicting the target variable (Sales) using Ordinary Least Squares (OLS) regression. The bars represent the feature importance scores, derived from the p-values. A **larger score** indicates that the feature has a **stronger and more statistically significant relationship** with the target variable.
+
+The **red dashed line at 0.95** represents the typical significance threshold. Features with **scores above 0.95** are considered **significant**, indicating they have a strong relationship with the target variable, and thus are more important in predicting sales. Features with scores **below 0.95** have a weaker influence on sales and may not be as important for the model's prediction.
+""")
+
+st.markdown("---")
+
+#--------------------------------------------------------------------
+# Step 8: How to Use the App
+#--------------------------------------------------------------------
+
 st.markdown("### 📌 How to Use This App")
 st.write("""
 1. Adjust the **TV, Radio, and Newspaper budgets** using the sliders on the left.
@@ -137,4 +206,3 @@ st.write("""
 """)
 
 st.markdown("**Created by:** Dr. Alvin Ang")
-
