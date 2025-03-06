@@ -88,6 +88,11 @@ def main():
     st.header("📊 Pair Plot for Selected Features")
     fig = sns.pairplot(iris_df, hue="species")
     st.pyplot(fig)
+    st.markdown("""
+    🔹 **Key Observations:**
+    - Petal length and petal width show strong separability between species.
+    - Sepal dimensions overlap more, making them less effective for classification.
+    """)
     st.write("---")
 
     #--------------------------------------------------------------------
@@ -97,6 +102,11 @@ def main():
     fig, ax = plt.subplots(figsize=(8, 6))
     sns.heatmap(iris_df.drop(columns=["species"]).corr(), annot=True, cmap="coolwarm", fmt=".2f", ax=ax)
     st.pyplot(fig)
+    st.markdown("""
+    🔹 **Key Observations:**
+    - Petal length and petal width have a strong positive correlation, meaning they tend to increase together.
+    - Sepal features show weaker correlations, making them less predictive for classification.
+    """)
     st.write("---")
 
     #--------------------------------------------------------------------
@@ -119,6 +129,11 @@ def main():
     ax.set_ylabel("Features")
     ax.set_title("Visualizing Important Features using Random Forest Classifier")
     st.pyplot(fig)
+    st.markdown("""
+    🔹 **Key Observations:**
+    - Petal length and petal width contribute most to classification.
+    - Sepal features are less influential, aligning with the patterns observed in previous charts.
+    """)
     st.write("---")
 
     #--------------------------------------------------------------------
@@ -135,8 +150,12 @@ def main():
     graph = graphviz.Source(dot_data)
     graph.render("random_forest_tree", format="png", cleanup=False)
     st.image("random_forest_tree.png", caption=f"Tree {tree_index} from Random Forest")
-
-    st.write("Each tree in the Random Forest is trained on a different subset of the data.")
+    st.markdown("""
+    🔹 **Key Observations:**
+    - This tree is a single component of the Random Forest model.
+    - Decision rules are based on feature values.
+    - Multiple trees together improve classification performance by reducing overfitting.
+    """)
     st.write("---")
 
     st.markdown("**THE END**")
@@ -145,4 +164,3 @@ def main():
 # Run the app
 if __name__ == "__main__":
     main()
-
