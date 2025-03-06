@@ -42,6 +42,30 @@ def main():
     wine_df = load_data()
     st.subheader('🍷 Wine Dataset Preview 🍷')
     st.dataframe(wine_df.head())
+
+    #--------------------------------------------------------------------
+    # Dataset Description
+    #--------------------------------------------------------------------
+    st.header("📖 Wine Dataset Description")
+    st.markdown("""
+    - **Chemical analysis of wines** from the same region in Italy, categorized into **three different wine classes** (0, 1, 2).
+    - **178 wine samples**, each described by **13 chemical properties** that influence classification.
+    
+    **Feature Descriptions:**
+    - **Alcohol**: Influences taste and body.
+    - **Malic Acid**: Adds tartness and acidity.
+    - **Ash**: Represents mineral content.
+    - **Alcalinity of Ash**: Relates to balance and smoothness.
+    - **Magnesium**: Affects structure and taste.
+    - **Total Phenols**: Impacts flavor and astringency.
+    - **Flavanoids**: Contribute to bitterness and antioxidants.
+    - **Nonflavanoid Phenols**: Affect texture and stability.
+    - **Proanthocyanins**: Influence tannins and color intensity.
+    - **Color Intensity**: Determines depth of color.
+    - **Hue**: Indicates wine shade and oxidation level.
+    - **OD280/OD315**: Measures phenolic compound absorbance.
+    - **Proline**: Linked to sweetness and wine quality.
+    """)
     st.write("---")
 
     # Define target and features
@@ -82,11 +106,6 @@ def main():
     st.header("📊 Pair Plot for Selected Features")
     fig = sns.pairplot(wine_df, hue="target")
     st.pyplot(fig)
-    st.markdown("""
-    🔹 **Key Observations:**
-    - Certain features show clear separation among wine classes.
-    - Some feature pairs overlap, making classification harder.
-    """)
     st.write("---")
 
     #--------------------------------------------------------------------
@@ -96,18 +115,12 @@ def main():
     fig, ax = plt.subplots(figsize=(10, 8))
     sns.heatmap(wine_df.drop(columns=["target"]).corr(), annot=True, cmap="coolwarm", fmt=".2f", ax=ax)
     st.pyplot(fig)
-    st.markdown("""
-    🔹 **Key Observations:**
-    - Some features like **flavanoids and total phenols** show strong correlations.
-    - Highly correlated features may contain redundant information.
-    """)
     st.write("---")
 
     #--------------------------------------------------------------------
     # Feature Importance
     #--------------------------------------------------------------------
     st.header("🔍 Feature Importance Using Random Forest")
-
     feature_importances_df = pd.DataFrame({
         "Feature": X.columns,
         "Importance": rfc.feature_importances_
@@ -123,20 +136,14 @@ def main():
     ax.set_ylabel("Features")
     ax.set_title("Visualizing Important Features using Random Forest Classifier")
     st.pyplot(fig)
-    st.markdown("""
-    🔹 **Key Observations:**
-    - Some features contribute significantly to classification.
-    - Others may be less influential but still hold predictive value.
-    """)
     st.write("---")
 
     #--------------------------------------------------------------------
-    # Visualizing One Decision Tree in Random Forest
+    # Visualizing a Tree from Random Forest
     #--------------------------------------------------------------------
     st.header("🌳 Visualizing a Tree from the Random Forest")
     estimators = rfc.estimators_
     tree_index = st.slider("Select a tree to visualize", 0, len(estimators) - 1, 0)
-
     dot_data = export_graphviz(estimators[tree_index], out_file=None,
                                feature_names=X.columns,
                                class_names=["Class 0", "Class 1", "Class 2"],
@@ -144,11 +151,6 @@ def main():
     graph = graphviz.Source(dot_data)
     graph.render("wine_random_forest_tree", format="png", cleanup=False)
     st.image("wine_random_forest_tree.png", caption=f"Tree {tree_index} from Random Forest")
-    st.markdown("""
-    🔹 **Key Observations:**
-    - Each tree represents a different decision-making process.
-    - The ensemble of trees improves classification accuracy.
-    """)
     st.write("---")
 
     st.markdown("**THE END**")
