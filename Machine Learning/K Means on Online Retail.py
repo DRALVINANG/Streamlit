@@ -55,18 +55,28 @@ st.markdown("---")  # Separator Line
 st.subheader("🛠 Data Preprocessing")
 
 st.write("### 1️⃣ Drop Rows with Missing CustomerID and Description")
+st.write("**Code:** `df = df.dropna(subset=['CustomerID', 'Description'])`\n\n**Purpose:** This removes any rows in the dataset where CustomerID or Description is missing (NaN values). Transactions without these values are incomplete and not useful for analysis.")
 df = df.dropna(subset=['CustomerID', 'Description'])
-st.write("Removed rows with missing CustomerID and Description.")
+
+st.markdown("---")  # Separator Line
 
 st.write("### 2️⃣ Remove Negative or Zero Quantities")
+st.write("**Code:** `df = df[df['Quantity'] > 0]`\n\n**Purpose:** This filters out rows where the Quantity is zero or negative. Negative values may indicate returns or errors, and zero quantities are not meaningful for sales analysis. We only keep rows where the quantity is positive.")
 df = df[df['Quantity'] > 0]
-st.write("Filtered out transactions with negative or zero quantities.")
+
+st.markdown("---")  # Separator Line
 
 st.write("### 3️⃣ Create a New Feature for Total Sales")
+st.write("**Code:** `df['TotalSales'] = df['Quantity'] * df['UnitPrice']`\n\n**Purpose:** This creates a new column called TotalSales by multiplying the Quantity of items by the UnitPrice. This gives the total revenue generated for each transaction.")
 df['TotalSales'] = df['Quantity'] * df['UnitPrice']
-st.write("Computed total revenue for each transaction.")
+
+st.markdown("---")  # Separator Line
 
 st.write("### 4️⃣ Group by CustomerID to Get Aggregated Features for Clustering")
+st.write("**Purpose:** This groups the data by CustomerID and calculates aggregate statistics for each customer:")
+st.write("- `'Quantity': 'sum'` → Sums the total quantity of products purchased by each customer.")
+st.write("- `'TotalSales': 'sum'` → Sums the total sales amount (revenue) for each customer.")
+st.write("- `'InvoiceNo': 'nunique'` → Counts the number of unique invoices (transactions) per customer.")
 customer_df = df.groupby('CustomerID').agg({
     'Quantity': 'sum',
     'TotalSales': 'sum',
