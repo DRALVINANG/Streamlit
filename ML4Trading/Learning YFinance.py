@@ -77,8 +77,36 @@ def display_options(stock):
     st.write(stock.options)
 
 def display_news(stock):
-    st.write("### News")
-    st.write(stock.news)
+    st.write("### Latest News")
+    news_data = stock.news
+    
+    if not news_data:
+        st.write("No news available.")
+        return
+    
+    for article in news_data:
+        content = article.get('content', {})
+        title = content.get('title', 'No Title')
+        summary = content.get('summary', 'No summary available.')
+        pub_date = content.get('pubDate', 'No date available.')
+        link = content.get('clickThroughUrl', {}).get('url', '#')
+        
+        # Safely retrieve the thumbnail
+        thumbnail = None
+        if 'thumbnail' in content and content['thumbnail'] is not None:
+            thumbnail = content['thumbnail'].get('originalUrl', None)
+        
+        st.write(f"**{title}**")
+        st.write(f"Published: {pub_date}")
+        st.write(f"Summary: {summary}")
+        
+        # Display the thumbnail if available
+        if thumbnail:
+            st.image(thumbnail, use_column_width=True)
+        
+        # Provide a clickable link to the full article
+        st.markdown(f"[Read full article]({link})")
+        st.write("\n---\n")
 
 # Streamlit App layout
 def main():
