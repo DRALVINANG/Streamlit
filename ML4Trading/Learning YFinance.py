@@ -1,10 +1,32 @@
 import streamlit as st
 import yfinance as yf
 import pandas as pd
+import plotly.graph_objects as go
 
 def get_stock_data(ticker):
     stock = yf.Ticker(ticker)
     return stock
+
+def plot_candlestick_chart(stock):
+    # Get historical data for the stock
+    hist = stock.history(period="1y")  # Show 1 year of data by default
+    fig = go.Figure(data=[go.Candlestick(
+        x=hist.index,
+        open=hist['Open'],
+        high=hist['High'],
+        low=hist['Low'],
+        close=hist['Close'],
+        increasing_line_color='green', decreasing_line_color='red'
+    )])
+
+    fig.update_layout(
+        title='Candlestick Chart',
+        xaxis_title='Date',
+        yaxis_title='Price (USD)',
+        xaxis_rangeslider_visible=False
+    )
+
+    st.plotly_chart(fig)
 
 def display_stock_info(stock):
     info = stock.info
@@ -112,11 +134,14 @@ def display_news(stock):
 def main():
     st.title('Stock Information Viewer using YFinance')
 
-    # Input for the user to enter the stock ticker
-    ticker = st.text_input('Enter Stock Ticker (e.g. D05.SI, AAPL)', 'D05.SI')
+    # Move the ticker input field to the sidebar
+    ticker = st.sidebar.text_input('Enter Stock Ticker (e.g. D05.SI, AAPL)', 'D05.SI')
     
     if ticker:
         stock = get_stock_data(ticker)
+
+        # Display the candlestick chart at the top
+        plot_candlestick_chart(stock)
         
         # Display stock information
         display_stock_info(stock)
@@ -140,3 +165,4 @@ def main():
 
 if __name__ == '__main__':
     main()
+
