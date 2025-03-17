@@ -113,15 +113,15 @@ else:
 # Input sliders for user to input custom values for Open, High, Low
 st.sidebar.header('Stock Prediction Input Parameters')
 
-open_price = st.sidebar.slider('Open Price', min_value=0, max_value=1000, value=200)
-high_price = st.sidebar.slider('High Price', min_value=0, max_value=1000, value=200)
-low_price = st.sidebar.slider('Low Price', min_value=0, max_value=1000, value=200)
+open_price = st.sidebar.slider('Today\'s Open Price', min_value=0, max_value=1000, value=200)
+high_price = st.sidebar.slider('Today\'s High Price', min_value=0, max_value=1000, value=200)
+low_price = st.sidebar.slider('Today\'s Low Price', min_value=0, max_value=1000, value=200)
 
 # Step 7: Model Prediction with User Inputs
 prediction = model.predict([[open_price, high_price, low_price]])
 
 # Display the result
-st.subheader(f"Predicted Close Price: ${prediction[0]:.2f}")
+st.subheader(f"Predicted Close Price for Tomorrow: ${prediction[0]:.2f}")
 
 # -------------------------------------------------------------------------------------
 # Step 8: R2 Score and Actual vs Predicted Comparison
