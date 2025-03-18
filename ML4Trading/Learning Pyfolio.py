@@ -83,9 +83,10 @@ st.subheader(f'{ticker} Performance Statistics')
 if not stock_returns.empty:
     try:
         perf_stats = pf.timeseries.perf_stats(stock_returns)
-        # Transpose the performance stats to display vertically
-        perf_stats_df = pd.DataFrame(perf_stats).T
-        st.write(perf_stats_df)  # Displaying performance stats in portrait format
+        
+        # Display each performance statistic line by line
+        for stat_name, stat_value in perf_stats.items():
+            st.write(f"{stat_name}: {stat_value:.4f}")  # Display each stat with 4 decimal points
     except Exception as e:
         st.error(f"Error calculating performance stats: {e}")
 else:
