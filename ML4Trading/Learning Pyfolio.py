@@ -3,6 +3,7 @@ import yfinance as yf
 import pandas as pd
 import pyfolio as pf
 import matplotlib.pyplot as plt
+from datetime import datetime
 
 # Set the style for matplotlib
 plt.style.use('fivethirtyeight')
@@ -11,11 +12,12 @@ plt.style.use('fivethirtyeight')
 st.title("Stock Analysis with Pyfolio")
 st.write("This app provides stock analysis including the stock price, daily returns, cumulative returns, performance statistics, and a Pyfolio tear sheet to evaluate the performance of a stock.")
 
-# Input for the stock ticker
-ticker = st.text_input("Enter Stock Ticker", value="D05.SI")
+# Sidebar input for the stock ticker
+ticker = st.sidebar.text_input("Enter Stock Ticker", value="D05.SI")
 
 # Define the start date
 start_date = '2023-01-01'
+end_date = datetime.today().strftime('%Y-%m-%d')  # Current date as end date for backtesting
 
 # Download stock historical data based on ticker input
 @st.cache_data
@@ -80,6 +82,10 @@ st.markdown("---")
 
 # Display performance statistics (check if returns data is not empty)
 st.subheader(f'{ticker} Performance Statistics')
+
+# Display the time range for backtesting
+st.write(f"**Backtesting Period:** {start_date} to {end_date}")
+
 if not stock_returns.empty:
     try:
         perf_stats = pf.timeseries.perf_stats(stock_returns)
