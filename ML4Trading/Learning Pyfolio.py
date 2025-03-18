@@ -1,104 +1,113 @@
-import os
-import numpy as np
-import pandas as pd
-import pandas_ta as ta
-import pyfolio as pf
-import yfinance as yf
-import matplotlib.pyplot as plt
-import seaborn as sns
-from sklearn.linear_model import LogisticRegression
-from sklearn import metrics
-from sklearn.preprocessing import StandardScaler
 import streamlit as st
+import yfinance as yf
+import pandas as pd
+import pyfolio as pf
+import matplotlib.pyplot as plt
 
-# Function to get target features
-def get_target_features(data):
-    data['PCT_CHANGE'] = data['Close'].pct_change()
-    data['VOLATILITY'] = data['PCT_CHANGE'].rolling(14).std() * 100
-    data['RSI'] = ta.rsi(data['Close'], timeperiod=14)
-    data['ADX'] = ta.adx(data['High'], data['Low'], data['Close'], length=14)['ADX_14']
-    data['SMA'] = ta.sma(data['Close'], timeperiod=14)
-    data['CORR'] = data['Close'].rolling(window=14).corr(data['SMA'])
-    data['Returns_4_Tmrw'] = data['Close'].pct_change().shift(-1)
-    data['Actual_Signal'] = np.where(data['Returns_4_Tmrw'] > 0, 1, 0)
-    data = data.dropna()
-    return data['Actual_Signal'], data[['VOLATILITY', 'CORR', 'RSI', 'ADX']]
+# Set the style for matplotlib
+plt.style.use('fivethirtyeight')
 
-# Streamlit app starts here
-st.title('Stock Prediction and Backtesting')
-ticker = st.text_input("Enter the Ticker Symbol", 'D05.SI')
+# Streamlit app header
+st.title("Stock Analysis with Pyfolio")
+st.write("This app provides stock analysis including the stock price, daily returns, cumulative returns, performance statistics, and a Pyfolio tear sheet to evaluate the performance of a stock.")
 
-# Download and display stock data
-data = yf.download(ticker, start='2022-01-01')
-data.columns = data.columns.droplevel(level=1)
-st.write("Stock Data:", data)
+# Input for the stock ticker
+ticker = st.text_input("Enter Stock Ticker", value="D05.SI")
 
-# Plot Close Price
-st.subheader('Stock Price Close Plot')
-fig, ax = plt.subplots(figsize=(18, 5))
-data['Close'].plot(ax=ax, color='b')
-ax.set_ylabel('Close Price')
+# Define the start date
+start_date = '2023-01-01'
+
+# Download stock historical data based on ticker input
+@st.cache_data
+def get_stock_data(ticker, start_date):
+    # Download data from Yahoo Finance
+    data = yf.download(ticker, start=start_date)
+    
+    # Flatten multi-level column headers if necessary
+    data.columns = data.columns.droplevel(level=1)  # Flatten the column header
+    return data
+
+# Fetch the data for the given ticker
+stock_history = get_stock_data(ticker, start_date)
+
+# Display stock price chart
+st.subheader(f'{ticker} Stock Price')
+fig, ax = plt.subplots(figsize=(10, 5))
+ax.plot(stock_history['Close'], label=f'{ticker} Close Price')
+ax.set_title(f'{ticker} Stock Price')
+ax.set_ylabel('Price (SGD)')
 ax.set_xlabel('Date')
-ax.set_title(f'{ticker} Close Price')
+ax.legend()
 st.pyplot(fig)
 
-# Get target and features
-y, X = get_target_features(data)
+# Description below the stock price chart
+st.write(f"The chart above shows the closing price of {ticker} over time, allowing you to visualize its historical performance.")
 
-# Train-test split
-split = int(0.8 * len(X))
-X_train, X_test, y_train, y_test = X[:split], X[split:], y[:split], y[split:]
+# Add a horizontal line to separate sections
+st.markdown("---")
 
-# Scaling features
-sc = StandardScaler()
-X_train = sc.fit_transform(X_train)
-X_test = sc.transform(X_test)
+# Calculate daily returns
+stock_returns = stock_history['Close'].pct_change().dropna()
 
-# Train Logistic Regression model
-model = LogisticRegression()
-model.fit(X_train, y_train)
-
-# Predict on test data
-y_pred = model.predict(X_test)
-
-# Confusion matrix and classification report
-st.subheader('Confusion Matrix')
-conf_matrix = metrics.confusion_matrix(y_test, y_pred)
-fig, ax = plt.subplots(figsize=(6, 4))
-sns.heatmap(conf_matrix, annot=True, fmt="d", cmap='Blues', cbar=False, ax=ax)
-ax.set_xlabel('Predicted Labels')
-ax.set_ylabel('Actual Labels')
-ax.set_title('Confusion Matrix')
+# Display daily returns chart
+st.subheader(f'{ticker} Daily Returns')
+fig, ax = plt.subplots(figsize=(10, 5))
+ax.bar(stock_returns.index, stock_returns, label=f'{ticker} Daily Returns')
+ax.set_title(f'{ticker} Daily Returns')
+ax.set_ylabel('Returns')
+ax.set_xlabel('Date')
+ax.legend()
 st.pyplot(fig)
 
-# Print classification report
-st.text(metrics.classification_report(y_test, y_pred))
+# Description below the daily returns chart
+st.write(f"The bar chart above represents the daily percentage returns of {ticker}. Each bar shows the daily change in the stock price.")
 
-# Backtesting the strategy
-df = yf.download(ticker, start='2016-01-01', end='2017-01-01')
-df.columns = df.columns.droplevel(level=1)
-df['PCT_CHANGE'] = df['Close'].pct_change()
-df['VOLATILITY'] = df['PCT_CHANGE'].rolling(14).std() * 100
-df['RSI'] = ta.rsi(df['Close'], timeperiod=14)
-df['ADX'] = ta.adx(df['High'], df['Low'], df['Close'], length=14)['ADX_14']
-df['SMA'] = ta.sma(df['Close'], timeperiod=14)
-df['CORR'] = df['Close'].rolling(window=14).corr(df['SMA'])
-df = df.dropna()
+# Add a horizontal line to separate sections
+st.markdown("---")
 
-# Scale and predict using the trained model
-df_scaled = sc.transform(df[['VOLATILITY', 'CORR', 'RSI', 'ADX']])
-df['predicted_signal_4_tmrw'] = model.predict(df_scaled)
+# Calculate cumulative returns using Pyfolio and display plot
+st.subheader(f'{ticker} Cumulative Returns')
+fig, ax = plt.subplots(figsize=(10, 5))
+pf.timeseries.cum_returns(stock_returns).plot(ax=ax)
+ax.set_title(f'Cumulative Returns for {ticker}')
+st.pyplot(fig)
 
-# Calculate strategy returns
-df['strategy_returns'] = df['predicted_signal_4_tmrw'].shift(1) * df['PCT_CHANGE']
-df.dropna(inplace=True)
+# Description below the cumulative returns chart
+st.write(f"The line chart above shows the cumulative returns for {ticker}. It helps to visualize how the stock's value accumulates over time.")
 
-# Display Pyfolio performance stats
-st.subheader('Performance Stats')
-perf_stats = pf.timeseries.perf_stats(df.strategy_returns)
-st.write(perf_stats)
+# Add a horizontal line to separate sections
+st.markdown("---")
 
-# Display Pyfolio tear sheet
-st.subheader('Pyfolio Tear Sheet')
-pf.create_simple_tear_sheet(df.strategy_returns)
-st.pyplot(plt)
+# Display performance statistics (check if returns data is not empty)
+st.subheader(f'{ticker} Performance Statistics')
+if not stock_returns.empty:
+    try:
+        perf_stats = pf.timeseries.perf_stats(stock_returns)
+        # Transpose the performance stats to display vertically
+        perf_stats_df = pd.DataFrame(perf_stats).T
+        st.write(perf_stats_df)  # Displaying performance stats in portrait format
+    except Exception as e:
+        st.error(f"Error calculating performance stats: {e}")
+else:
+    st.error("Invalid stock returns data. Please check the ticker and try again.")
+
+# Add a horizontal line to separate sections
+st.markdown("---")
+
+# Display Pyfolio Simple Tear Sheet
+st.subheader(f'{ticker} Pyfolio Tear Sheet')
+if not stock_returns.empty:
+    try:
+        # Remove the 'fig' argument from create_simple_tear_sheet as it does not accept it
+        pf.create_simple_tear_sheet(stock_returns)
+        st.pyplot(plt)  # Displaying the tear sheet using matplotlib
+    except Exception as e:
+        st.error(f"Error generating tear sheet: {e}")
+else:
+    st.error("Invalid stock returns data. Please check the ticker and try again.")
+
+# Add a horizontal line to separate sections
+st.markdown("---")
+
+# Display "Created by Dr. Alvin Ang" at the bottom
+st.write("Created by Dr. Alvin Ang")
