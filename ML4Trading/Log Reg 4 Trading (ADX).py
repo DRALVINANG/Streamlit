@@ -67,8 +67,8 @@ y_pred = model.predict(X_test)
 accuracy = metrics.accuracy_score(y_test, y_pred) * 100
 st.subheader('Model Accuracy')
 
-# Make the accuracy bold and larger
-st.markdown(f"<h2 style='font-size: 36px; color: black; font-weight: bold;'>Accuracy: {accuracy:.2f}%</h2>", unsafe_allow_html=True)
+# Adjust font size to normal
+st.write(f"Accuracy: {accuracy:.2f}%")
 
 # Description
 st.write("The accuracy score represents how well the model predicts the direction of stock price movement based on the features used.")
@@ -125,26 +125,25 @@ cumulative_returns = perf_stats.get('cumulative_return', 'N/A')
 
 # Ensure the cumulative return is numeric, otherwise use 'N/A'
 try:
-    cumulative_returns = float(cumulative_returns)
-    cumulative_returns = f"{cumulative_returns:.4f}"
+    cumulative_returns = float(cumulative_returns) * 100  # Convert to percentage
+    cumulative_returns = f"{cumulative_returns:.2f}%"
 except (ValueError, TypeError):
     cumulative_returns = 'N/A'
 
-# Display the conclusion dynamically
+# Conclusion with bold and larger font for all points
 st.markdown(f"""
-- **Machine Learning Model used:** Logistic Regression
-- **Training Period:** 2022-01-01 to 2023-12-31
-- **Backtesting Period:** 2016-01-01 to 2017-01-01
-- **Features / Technical Indicators used:**
-  - ADX (Average Directional Index)
-  - Volatility
-  - Correlation between price and SMA
-  - RSI (Relative Strength Index)
-- **Model accuracy:** {accuracy:.2f}%
-- **Cumulative Returns during the Backtesting Period:** {cumulative_returns}
-""")
+<h2 style="font-size: 24px; font-weight: bold;">- Machine Learning Model used: Logistic Regression</h2>
+<h2 style="font-size: 24px; font-weight: bold;">- Training Period: 2022-01-01 to 2023-12-31</h2>
+<h2 style="font-size: 24px; font-weight: bold;">- Backtesting Period: 2016-01-01 to 2017-01-01</h2>
+<h2 style="font-size: 24px; font-weight: bold;">- Features / Technical Indicators used:</h2>
+<h3 style="font-size: 20px; font-weight: bold;">  - ADX (Average Directional Index)</h3>
+<h3 style="font-size: 20px; font-weight: bold;">  - Volatility</h3>
+<h3 style="font-size: 20px; font-weight: bold;">  - Correlation between price and SMA</h3>
+<h3 style="font-size: 20px; font-weight: bold;">  - RSI (Relative Strength Index)</h3>
+<h2 style="font-size: 24px; font-weight: bold;">- Model accuracy: {accuracy:.2f}%</h2>
+<h2 style="font-size: 24px; font-weight: bold;">- Cumulative Returns during the Backtesting Period: {cumulative_returns}</h2>
+""", unsafe_allow_html=True)
 
 # Footer
 st.markdown("---")
 st.write("Created by Dr. Alvin Ang")
-
