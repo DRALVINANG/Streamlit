@@ -10,6 +10,7 @@ from sklearn.linear_model import LogisticRegression
 from sklearn import metrics
 from sklearn.preprocessing import StandardScaler
 import streamlit as st
+from datetime import datetime
 
 # Function to get target features
 def get_target_features(data):
@@ -95,16 +96,53 @@ df.dropna(inplace=True)
 # Display Pyfolio performance stats
 st.subheader('Performance Stats')
 perf_stats = pf.timeseries.perf_stats(df.strategy_returns)
-st.write(perf_stats)  # Display the entire performance stats object
 
-# Description
+# Display performance stats line by line
+for stat_name, stat_value in perf_stats.items():
+    st.write(f"**{stat_name}:** {stat_value:.4f}")
+
+st.markdown("---")
 st.write("The performance stats provide insights into how the strategy performed over time, such as cumulative return, volatility, and maximum drawdown.")
 st.markdown("---")
 
 # Display Pyfolio tear sheet
-st.subheader('Pyfolio Tear Sheet')
-pf.create_simple_tear_sheet(df.strategy_returns)
-st.pyplot(plt)
+st.subheader(f'{ticker} Pyfolio Tear Sheet')
+if not df['strategy_returns'].empty:
+    try:
+        pf.create_simple_tear_sheet(df['strategy_returns'])
+        st.pyplot(plt)  # Displaying the tear sheet using matplotlib
+    except Exception as e:
+        st.error(f"Error generating tear sheet: {e}")
+else:
+    st.error("Invalid stock returns data. Please check the ticker and try again.")
+
+# Add conclusion section
+st.markdown("---")
+st.write("### Conclusion")
+
+# Extract the necessary stats for the conclusion
+cumulative_returns = perf_stats.get('cumulative_return', 'N/A')
+
+# Ensure the cumulative return is numeric, otherwise use 'N/A'
+try:
+    cumulative_returns = float(cumulative_returns)
+    cumulative_returns = f"{cumulative_returns:.4f}"
+except (ValueError, TypeError):
+    cumulative_returns = 'N/A'
+
+# Display the conclusion dynamically
+st.markdown(f"""
+- **Machine Learning Model used:** Logistic Regression
+- **Training Period:** 2022-01-01 to 2023-12-31
+- **Backtesting Period:** 2016-01-01 to 2017-01-01
+- **Features / Technical Indicators used:**
+  - ADX (Average Directional Index)
+  - Volatility
+  - Correlation between price and SMA
+  - RSI (Relative Strength Index)
+- **Model accuracy:** {accuracy:.2f}%
+- **Cumulative Returns during the Backtesting Period:** {cumulative_returns}
+""")
 
 # Footer
 st.markdown("---")
