@@ -121,7 +121,7 @@ st.markdown("---")
 st.write("### Conclusion")
 
 # Extract the necessary stats for the conclusion
-cumulative_returns = perf_stats.get('cumulative_return', 'N/A')
+cumulative_returns = perf_stats.get('Cumulative returns', 'N/A')
 
 # Ensure the cumulative return is numeric, otherwise use 'N/A'
 try:
@@ -132,8 +132,11 @@ except (ValueError, TypeError):
 
 # Conclusion with bold and larger font for all points
 st.markdown(f"""
-<h2 style="font-size: 24px; font-weight: bold;">- Machine Learning Model used: Logistic Regression</h2>
-<h2 style="font-size: 24px; font-weight: bold;">- Training Period: 2022-01-01 to 2023-12-31</h2>
+<h2 style="font-size: 24px; font-weight: bold;">Machine Learning Model used:
+<h2 style="font-size: 18px; font-weight: bold; color: red;">-  Logistic Regression</h2>
+ 
+<h2 style="font-size: 24px; font-weight: bold;">Training Period:
+<h2 style="font-size: 24px; font-weight: bold;">- 2022-01-01 to 2023-12-31</h2>
 <h2 style="font-size: 24px; font-weight: bold;">- Backtesting Period: 2016-01-01 to 2017-01-01</h2>
 <h2 style="font-size: 24px; font-weight: bold;">- Features / Technical Indicators used:</h2>
 <h3 style="font-size: 20px; font-weight: bold;">  - ADX (Average Directional Index)</h3>
@@ -147,3 +150,4 @@ st.markdown(f"""
 # Footer
 st.markdown("---")
 st.write("Created by Dr. Alvin Ang")
+
