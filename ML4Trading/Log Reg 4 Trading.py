@@ -26,12 +26,13 @@ def get_target_features(data):
 
 # Streamlit app starts here
 st.title('Stock Prediction and Backtesting')
-ticker = st.text_input("Enter the Ticker Symbol", 'D05.SI')
 
-# Download and display stock data
+# Left Sidebar for ticker input
+ticker = st.sidebar.text_input("Enter the Ticker Symbol", 'D05.SI')
+
+# Download and plot stock data
 data = yf.download(ticker, start='2022-01-01')
 data.columns = data.columns.droplevel(level=1)
-st.write("Stock Data:", data)
 
 # Plot Close Price
 st.subheader('Stock Price Close Plot')
@@ -61,18 +62,16 @@ model.fit(X_train, y_train)
 # Predict on test data
 y_pred = model.predict(X_test)
 
-# Confusion matrix and classification report
-st.subheader('Confusion Matrix')
-conf_matrix = metrics.confusion_matrix(y_test, y_pred)
-fig, ax = plt.subplots(figsize=(6, 4))
-sns.heatmap(conf_matrix, annot=True, fmt="d", cmap='Blues', cbar=False, ax=ax)
-ax.set_xlabel('Predicted Labels')
-ax.set_ylabel('Actual Labels')
-ax.set_title('Confusion Matrix')
-st.pyplot(fig)
+# Accuracy score as percentage
+accuracy = metrics.accuracy_score(y_test, y_pred) * 100
+st.subheader('Model Accuracy')
 
-# Print classification report
-st.text(metrics.classification_report(y_test, y_pred))
+# Make the accuracy bold and larger
+st.markdown(f"<h2 style='font-size: 36px; color: black; font-weight: bold;'>Accuracy: {accuracy:.2f}%</h2>", unsafe_allow_html=True)
+
+# Description
+st.write("The accuracy score represents how well the model predicts the direction of stock price movement based on the features used.")
+st.markdown("---")
 
 # Backtesting the strategy
 df = yf.download(ticker, start='2016-01-01', end='2017-01-01')
@@ -96,9 +95,18 @@ df.dropna(inplace=True)
 # Display Pyfolio performance stats
 st.subheader('Performance Stats')
 perf_stats = pf.timeseries.perf_stats(df.strategy_returns)
-st.write(perf_stats)
+st.write(perf_stats)  # Display the entire performance stats object
+
+# Description
+st.write("The performance stats provide insights into how the strategy performed over time, such as cumulative return, volatility, and maximum drawdown.")
+st.markdown("---")
 
 # Display Pyfolio tear sheet
 st.subheader('Pyfolio Tear Sheet')
 pf.create_simple_tear_sheet(df.strategy_returns)
 st.pyplot(plt)
+
+# Footer
+st.markdown("---")
+st.write("Created by Dr. Alvin Ang")
+
