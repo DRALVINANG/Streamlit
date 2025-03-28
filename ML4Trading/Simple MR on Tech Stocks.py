@@ -6,6 +6,10 @@ from sklearn.metrics import r2_score
 import seaborn as sns
 import matplotlib.pyplot as plt
 
+import streamlit as st
+
+st.set_option('client.showErrorDetails', False)
+
 # -------------------------------------------------------------------------------------
 # Step 1: Define Available Tech Stock Options
 # -------------------------------------------------------------------------------------
