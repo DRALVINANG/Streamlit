@@ -25,14 +25,21 @@ def get_target_features(data):
     data = data.dropna()
     return data['Actual_Signal'], data[['VOLATILITY', 'CORR', 'RSI', 'ADX']]
 
-# Streamlit app starts here
-st.title('Stock Prediction and Backtesting')
-
 # Left Sidebar for ticker input
 ticker = st.sidebar.text_input("Enter the Ticker Symbol", 'D05.SI')
 
-# Download and plot stock data
-data = yf.download(ticker, start='2022-01-01')
+# User input for training and backtesting period
+train_start_date = st.sidebar.date_input("Training Start Date", datetime(2022, 1, 1))
+train_end_date = st.sidebar.date_input("Training End Date", datetime(2023, 12, 31))
+backtest_start_date = st.sidebar.date_input("Backtesting Start Date", datetime(2016, 1, 1))
+backtest_end_date = st.sidebar.date_input("Backtesting End Date", datetime(2017, 1, 1))
+
+# Dynamically update title with company's name (based on ticker)
+company_name = yf.Ticker(ticker).info.get('longName', ticker)  # Get company name from Yahoo Finance
+st.title(f'Stock Prediction and Backtesting for {company_name}')
+
+# Download and plot stock data for training
+data = yf.download(ticker, start=train_start_date, end=train_end_date)
 data.columns = data.columns.droplevel(level=1)
 
 # Plot Close Price
@@ -75,7 +82,7 @@ st.write("The accuracy score represents how well the model predicts the directio
 st.markdown("---")
 
 # Backtesting the strategy
-df = yf.download(ticker, start='2016-01-01', end='2017-01-01')
+df = yf.download(ticker, start=backtest_start_date, end=backtest_end_date)
 df.columns = df.columns.droplevel(level=1)
 df['PCT_CHANGE'] = df['Close'].pct_change()
 df['VOLATILITY'] = df['PCT_CHANGE'].rolling(14).std() * 100
@@ -118,7 +125,7 @@ else:
 
 # Add conclusion section
 st.markdown("---")
-st.write("### Conclusion")
+st.write("### CONCLUSION")
 
 # Extract the necessary stats for the conclusion
 cumulative_returns = perf_stats.get('Cumulative returns', 'N/A')
@@ -136,20 +143,24 @@ st.markdown(f"""
 <h2 style="font-size: 18px; font-weight: bold; color: red;">-  Logistic Regression</h2>
  
 <h2 style="font-size: 24px; font-weight: bold;">Training Period:
-<h2 style="font-size: 18px; font-weight: bold; color: red;">- 2022-01-01 to 2023-12-31</h2>
+<h2 style="font-size: 18px; font-weight: bold; color: red;">- {train_start_date} to {train_end_date}</h2>
 
-<h2 style="font-size: 24px; font-weight: bold;">- Backtesting Period:
-<h2 style="font-size: 18px; font-weight: bold; color: red;"> - 2016-01-01 to 2017-01-01</h2>
+<h2 style="font-size: 24px; font-weight: bold;">Backtesting Period:
+<h2 style="font-size: 18px; font-weight: bold; color: red;"> - {backtest_start_date} to {backtest_end_date}</h2>
 
-<h2 style="font-size: 24px; font-weight: bold;">- Features / Technical Indicators used:</h2>
+<h2 style="font-size: 24px; font-weight: bold;">Features / Technical Indicators used:</h2>
 <h3 style="font-size: 18px; font-weight: bold; color: red;">  - ADX (Average Directional Index)</h3>
 <h3 style="font-size: 18px; font-weight: bold; color: red;">  - Volatility</h3>
 <h3 style="font-size: 18px; font-weight: bold; color: red;">  - Correlation between price and SMA</h3>
 <h3 style="font-size: 18px; font-weight: bold; color: red;">  - RSI (Relative Strength Index)</h3>
-<h2 style="font-size: 18px; font-weight: bold; color: red;">- Model accuracy: {accuracy:.2f}%</h2>
-<h2 style="font-size: 18px; font-weight: bold; color: red;">- Cumulative Returns during the Backtesting Period: {cumulative_returns}</h2>
+<h2 style="font-size: 24px; font-weight: bold;">Model accuracy:
+<h2 style="font-size: 48px; font-weight: bold; color: red;">  {accuracy:.2f}%</h2>
+
+<h2 style="font-size: 24px; font-weight: bold;">Cumulative Returns during the Backtesting Period:
+<h2 style="font-size: 88px; font-weight: bold; color: red;">  {cumulative_returns}</h2>
 """, unsafe_allow_html=True)
 
 # Footer
 st.markdown("---")
 st.write("Created by Dr. Alvin Ang")
+
