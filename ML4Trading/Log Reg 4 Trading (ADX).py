@@ -136,18 +136,20 @@ st.markdown(f"""
 <h2 style="font-size: 18px; font-weight: bold; color: red;">-  Logistic Regression</h2>
  
 <h2 style="font-size: 24px; font-weight: bold;">Training Period:
-<h2 style="font-size: 24px; font-weight: bold;">- 2022-01-01 to 2023-12-31</h2>
-<h2 style="font-size: 24px; font-weight: bold;">- Backtesting Period: 2016-01-01 to 2017-01-01</h2>
+<h2 style="font-size: 18px; font-weight: bold; color: red;">- 2022-01-01 to 2023-12-31</h2>
+
+<h2 style="font-size: 24px; font-weight: bold;">- Backtesting Period:
+<h2 style="font-size: 18px; font-weight: bold; color: red;"> - 2016-01-01 to 2017-01-01</h2>
+
 <h2 style="font-size: 24px; font-weight: bold;">- Features / Technical Indicators used:</h2>
-<h3 style="font-size: 20px; font-weight: bold;">  - ADX (Average Directional Index)</h3>
-<h3 style="font-size: 20px; font-weight: bold;">  - Volatility</h3>
-<h3 style="font-size: 20px; font-weight: bold;">  - Correlation between price and SMA</h3>
-<h3 style="font-size: 20px; font-weight: bold;">  - RSI (Relative Strength Index)</h3>
-<h2 style="font-size: 24px; font-weight: bold;">- Model accuracy: {accuracy:.2f}%</h2>
-<h2 style="font-size: 24px; font-weight: bold;">- Cumulative Returns during the Backtesting Period: {cumulative_returns}</h2>
+<h3 style="font-size: 18px; font-weight: bold; color: red;">  - ADX (Average Directional Index)</h3>
+<h3 style="font-size: 18px; font-weight: bold; color: red;">  - Volatility</h3>
+<h3 style="font-size: 18px; font-weight: bold; color: red;">  - Correlation between price and SMA</h3>
+<h3 style="font-size: 18px; font-weight: bold; color: red;">  - RSI (Relative Strength Index)</h3>
+<h2 style="font-size: 18px; font-weight: bold; color: red;">- Model accuracy: {accuracy:.2f}%</h2>
+<h2 style="font-size: 18px; font-weight: bold; color: red;">- Cumulative Returns during the Backtesting Period: {cumulative_returns}</h2>
 """, unsafe_allow_html=True)
 
 # Footer
 st.markdown("---")
 st.write("Created by Dr. Alvin Ang")
-
