@@ -95,29 +95,6 @@ st.write(f"Accuracy: {accuracy:.2f}%")
 st.write("This section evaluates the model's performance by displaying the accuracy, which represents the percentage of correct predictions.")
 st.markdown('---')
 
-# Confusion Matrix and Classification Report
-def get_metrics(y_test, predicted):
-    confusion_matrix_data = metrics.confusion_matrix(y_test, predicted)
-    
-    # Display Confusion Matrix
-    st.subheader('Confusion Matrix')
-    fig, ax = plt.subplots(figsize=(6, 4))
-    sns.heatmap(confusion_matrix_data, fmt="d", cmap='Blues', cbar=False, annot=True, ax=ax)
-    ax.set_xlabel('Predicted Labels', fontsize=12)
-    ax.set_ylabel('Actual Labels', fontsize=12)
-    ax.set_title('Confusion Matrix', fontsize=14)
-    ax.xaxis.set_ticklabels(['No Position', 'Long Position'])
-    ax.yaxis.set_ticklabels(['No Position', 'Long Position'])
-    st.pyplot(fig)
-
-    # Display classification report
-    st.subheader('Classification Report')
-    st.text(metrics.classification_report(y_test, predicted))
-
-
-st.write("The confusion matrix and classification report offer insights into the performance of the model, specifically its ability to predict long positions and no positions.")
-st.markdown('---')
-
 # Backtesting the Model
 df = yf.download(ticker, start=backtest_start_date, end=backtest_end_date)
 df.columns = df.columns.droplevel(level=1)
@@ -206,4 +183,3 @@ st.markdown('---')
 # Footer
 st.markdown("---")
 st.write("Created by Dr. Alvin Ang")
-
