@@ -44,8 +44,6 @@ def main():
     st.title('🌿 Breast Cancer PCA Analysis 🌸')
     st.write("""
     This app performs Principal Component Analysis (PCA) on the Breast Cancer dataset.
-    It visualizes the explained variance, the relationship between the first two principal components,
-    and the feature loadings for the principal components.
     """)
     st.write("---")
 
@@ -178,14 +176,25 @@ def main():
         ax.set_ylabel('Second Principal Component')
         ax.set_title('PCA: First vs Second Principal Component')
         st.pyplot(fig)
+        st.markdown("""
+        - ***Yellow dots:*** Represent not cancerous.(benign cases).
+        - ***Blue dots:*** Represent CANCEROUS (malignant cases).
+        """)
         st.write("---")
 
     # Step 6: Feature Loadings for Principal Components
     st.header("🔍 Feature Loadings for PCA")
     loadings = pd.DataFrame(pca.components_.T, columns=[f'PC{i+1}' for i in range(n_components)], index=df.columns)
-    st.subheader('Feature Loadings')
     st.dataframe(loadings)
-
+    st.markdown("""
+    - **Loading Values range from -1 to 1.**
+    - They represent how much a feature influences that component
+    - The loadings don’t sum up to 100%.
+    - **Loadings closer to 1 (or -1)** mean the feature has a **strong influence** on that component.
+    - Loadings closer to 0 mean the feature has **little influence** on that component.
+    - **Positive Loading** means that as the factor increases, the principal component also increases.
+    - **Negative Loading** means that as the factor increases, the principal component decreases.
+    """)
     st.markdown("---")
     # Step 7: Visualize the Loadings
     st.header("📊 Visualizing Feature Loadings")
@@ -197,13 +206,38 @@ def main():
     ax.set_title('Feature Loadings for Principal Components')
     ax.legend()
     st.pyplot(fig)
+    
+    st.markdown("""
+    📌***Assuming 2 Components are Chosen...***
+    
+    📌**What the colors mean:**
+    - Blue bars: Represent the loadings for PC1. If a bar is mostly blue, it means the feature contributes more to PC1 than to PC2.
+    - Orange bars: Represent the loadings for PC2. If a bar is mostly green, it means the feature contributes more to PC2 than to PC1.
+    
+    📌 ***Different Heights of Bars:***
+    - The height of each bar shows the magnitude of the feature’s contribution to each principal component.
+    - A taller bar (positive or negative) means the feature has a stronger contribution to the component.
+    - The green bar for mean radius extending below the 0 mark means that the feature has a negative loading on PC2.
+    - When the green bar for mean radius dips below zero, it suggests that mean radius is negatively correlated with PC2. In other words, as the value of PC2 increases, the value of mean radius tends to decrease (and vice versa).
+        
+    📌 ***How is it Possible for Values to be Both Positive and Negative?***
+    - **With reference to the “Mean Radius” (first bar)**
+    - The “mean radius” component having both a portion above and below 0 might appear confusing.
+    - For “mean radius,” the loading value for **PC2** could be positive in one direction ***for certain aspects of the dataset***
+    - And negative in another, but this doesn’t imply a contradiction — it simply represents the ***dual nature of the influence of this feature.***
+    - The loading value is a vector projection, so it can have both positive and negative impacts.
+
+    📌 ***Why is Loading Important?***
+    - It helps us better understand what PC1 and PC2 is made up of.
+    - Since the higher the PC1 means the higher the chance of cancer, we can identify which features are strongly contribute to PC1….
+    """)
     st.write("---")
 
     #--------------------------------------------------------------------
     # Conclusion
     #--------------------------------------------------------------------
     st.markdown("**THE END**")
-    st.markdown("© Dr. Your Name")
+    st.markdown("© Dr. Alvin Ang")
 
 # Run the app
 if __name__ == "__main__":
