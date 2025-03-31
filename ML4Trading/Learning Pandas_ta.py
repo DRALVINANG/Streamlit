@@ -64,7 +64,7 @@ def apply_technical_indicators(df):
 # Step 4: Streamlit App Interface
 # --------------------------------------------------------------------------------------
 
-st.title("🐼Stock Price and Technical Indicators")
+st.title("🐼Pandas TA Technical Indicators")
 
 # Sidebar for entering the ticker symbol and start date
 ticker = st.sidebar.text_input("Enter Stock Ticker Symbol", value='TSLA')
