@@ -47,7 +47,7 @@ backtest_end_date = st.sidebar.date_input("Backtesting End Date", datetime(2022,
 
 # Dynamically Update Title
 company_name = yf.Ticker(ticker).info.get('longName', ticker)
-st.title(f'Multiple Linear Regression for {company_name}')
+st.title(f'📊Multiple Linear Regression for {company_name}')
 
 # Download Stock Data
 data = yf.download(ticker, start=train_start_date, end=train_end_date)
