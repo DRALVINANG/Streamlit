@@ -46,9 +46,10 @@ def run_clustering():
 
 # Streamlit UI elements
 st.title('Customer Segmentation with Agglomerative Clustering')
+st.markdown("---")
 
 # Move original data to the top
-st.subheader('Original Data')
+st.header('Original Data')
 st.write("""
 This data contains the spending habits of 5 customers across three categories: Groceries, Clothes, and Electronics.
 """)
@@ -60,25 +61,29 @@ data = {
 }
 df_original = pd.DataFrame(data)
 st.write(df_original)
+st.markdown("---")
 
 # Run the clustering analysis
 df_clustered = run_clustering()
+st.markdown("---")
 
 # Display clustered data
-st.subheader('Clustered Data')
+st.header('Clustered Data')
 st.write(df_clustered[['CustomerID', 'Cluster']])
+st.markdown("---")
 
 # Provide interpretation of the clusters
-st.subheader('Cluster Interpretation')
+st.header('Cluster Interpretation')
 
 st.write("""
 - **Cluster 0**: Customers 1 and 4: Premium customers with high expenditures across groceries and electronics, and moderate-to-high spending on clothes.
 - **Cluster 1**: Customers 0 and 2: Low spending profile, particularly on clothes and electronics.
 - **Cluster 2**: Customer 3: A high spender across all categories, possibly an outlier or high-income customer.
 """)
+st.markdown("---")
 
 # Explanation of the dendrogram and the red line
-st.subheader('Dendrogram Explanation')
+st.header('Dendrogram Explanation')
 
 st.write("""
 ### What is a Dendrogram?
@@ -93,9 +98,10 @@ A dendrogram is a tree-like diagram that records the sequences of merges in hier
 - **Cluster 1**: Low spenders (Customers 0 & 2)
 - **Cluster 2**: Very high spender (Customer 3)
 """)
+st.markdown("---")
 
 # Further explanation of the methodology
-st.subheader('Explanation of the Methodology')
+st.header('Explanation of the Methodology')
 st.write("""
 ### Linkage & Method
 - **Linkage**: Measures how the distance between two clusters is calculated. Ward's method is used here because it minimizes within-cluster variance.
@@ -105,6 +111,7 @@ st.write("""
 ### Agglomerative Clustering
 Agglomerative clustering works by iteratively merging the closest pairs of clusters. The process is visualized in the dendrogram, which shows how clusters are progressively merged based on their similarity.
 """)
+st.markdown("---")
 
 # Displaying further reference
 st.write("""
@@ -112,3 +119,4 @@ For more information, you can refer to [Clustering Methods Reference](https://ww
 
 Created by Dr. Alvin Ang
 """)
+st.markdown("---")
