@@ -45,11 +45,11 @@ def run_clustering():
     return df
 
 # Streamlit UI elements
-st.title('Customer Segmentation with Agglomerative Clustering')
+st.title('👬Customer Segmentation with Agglomerative Clustering')
 st.markdown("---")
 
 # Move original data to the top
-st.header('Original Data')
+st.header('📈Original Data')
 st.write("""
 This data contains the spending habits of 5 customers across three categories: Groceries, Clothes, and Electronics.
 """)
@@ -68,12 +68,12 @@ df_clustered = run_clustering()
 st.markdown("---")
 
 # Display clustered data
-st.header('Clustered Data')
+st.header('📉Clustered Data')
 st.write(df_clustered[['CustomerID', 'Cluster']])
 st.markdown("---")
 
 # Provide interpretation of the clusters
-st.header('Cluster Interpretation')
+st.header('📌Cluster Interpretation')
 
 st.write("""
 - **Cluster 0**: Customers 1 and 4: Premium customers with high expenditures across groceries and electronics, and moderate-to-high spending on clothes.
@@ -83,7 +83,7 @@ st.write("""
 st.markdown("---")
 
 # Explanation of the dendrogram and the red line
-st.header('Dendrogram Explanation')
+st.header('✅Dendrogram Explanation')
 
 st.write("""
 ### What is a Dendrogram?
@@ -101,7 +101,7 @@ A dendrogram is a tree-like diagram that records the sequences of merges in hier
 st.markdown("---")
 
 # Further explanation of the methodology
-st.header('Explanation of the Methodology')
+st.header('📜Explanation of the Methodology')
 st.write("""
 ### Linkage & Method
 - **Linkage**: Measures how the distance between two clusters is calculated. Ward's method is used here because it minimizes within-cluster variance.
@@ -117,6 +117,6 @@ st.markdown("---")
 st.write("""
 For more information, you can refer to [Clustering Methods Reference](https://www.alvinang.sg/s/Clustering_methods_2023.pdf).
 
-Created by Dr. Alvin Ang
+🤓Created by Dr. Alvin Ang
 """)
 st.markdown("---")
