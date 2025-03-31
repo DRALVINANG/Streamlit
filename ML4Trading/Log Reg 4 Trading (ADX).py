@@ -36,7 +36,7 @@ backtest_end_date = st.sidebar.date_input("Backtesting End Date", datetime(2017,
 
 # Dynamically update title with company's name (based on ticker)
 company_name = yf.Ticker(ticker).info.get('longName', ticker)  # Get company name from Yahoo Finance
-st.title(f'Stock Prediction and Backtesting for {company_name}')
+st.title(f'📈Stock Prediction using Logistic Regression for {company_name}')
 
 # Download and plot stock data for training
 data = yf.download(ticker, start=train_start_date, end=train_end_date)
