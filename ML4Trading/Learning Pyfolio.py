@@ -9,7 +9,7 @@ from datetime import datetime
 plt.style.use('fivethirtyeight')
 
 # Streamlit app header
-st.title("Stock Analysis with Pyfolio")
+st.title("📜Stock Analysis with Pyfolio")
 st.write("This app provides stock analysis including the stock price, daily returns, cumulative returns, performance statistics, and a Pyfolio tear sheet to evaluate the performance of a stock.")
 
 # Sidebar input for the stock ticker
