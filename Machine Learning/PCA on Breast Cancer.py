@@ -146,6 +146,16 @@ def main():
     ax.set_ylabel('Cumulative Variance Explained')
     st.pyplot(fig)
     
+    st.subheader("📊 Variance Explained by Each Component")
+    explained_variance_ratio = pca.explained_variance_ratio_ * 100  # Convert to percentage
+    explained_variance_df = pd.DataFrame({
+        'Principal Component': [f'PC{i+1}' for i in range(len(explained_variance_ratio))],
+        'Variance Explained (%)': [f"{var:.2f}%" for var in explained_variance_ratio]
+    })
+
+    st.dataframe(explained_variance_df)
+
+
     st.markdown("""
     📌***Assuming 10 components....***
     - We can see from the Cumulative Variance plot that...
@@ -176,6 +186,7 @@ def main():
     st.subheader('Feature Loadings')
     st.dataframe(loadings)
 
+    st.markdown("---")
     # Step 7: Visualize the Loadings
     st.header("📊 Visualizing Feature Loadings")
     fig, ax = plt.subplots(figsize=(10, 6))
