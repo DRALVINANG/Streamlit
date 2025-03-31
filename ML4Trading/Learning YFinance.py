@@ -134,7 +134,7 @@ def display_news(stock):
 
 # Streamlit App layout
 def main():
-    st.title('Stock Information Viewer using YFinance')
+    st.title('💰Stock Information Viewer using YFinance')
 
     # Move the ticker input field to the sidebar
     ticker = st.sidebar.text_input('Enter Stock Ticker (e.g. D05.SI, AAPL)', 'D05.SI')
