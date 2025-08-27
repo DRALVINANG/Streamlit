@@ -7,3 +7,4 @@ scikit-learn
 numpy ==1.26.4
 seaborn
 pyfolio
+pandas-ta
