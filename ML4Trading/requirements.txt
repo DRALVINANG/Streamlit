@@ -1,7 +1,6 @@
 streamlit >=0.78.0
 yfinance >= 0.2.48
 
-
 numpy
 pandas
 matplotlib
