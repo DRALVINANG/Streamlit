@@ -6,4 +6,4 @@ matplotlib
 scikit-learn
 numpy
 seaborn
-pyfolio >= 0.4.0
+pyfolio
