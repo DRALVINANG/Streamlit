@@ -5,5 +5,5 @@ seaborn==0.13.2
 scikit-learn==1.6.0
 plotly==6.0.0
 streamlit
-yfinance==0.2.65
+yfinance
 pyfolio==0.9.2
