@@ -4,6 +4,6 @@ pandas
 plotly
 matplotlib
 scikit-learn
-numpy
+numpy ==1.26.4
 seaborn
 pyfolio
