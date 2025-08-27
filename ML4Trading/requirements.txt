@@ -6,4 +6,4 @@ scikit-learn
 plotly
 streamlit
 yfinance
-pyfolio==0.9.2
+#pyfolio==0.9.2
