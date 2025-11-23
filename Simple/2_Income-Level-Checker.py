@@ -7,11 +7,11 @@ income = st.number_input("Enter your income", step=1)
 if income >= 20000:
     result = "High income"
 elif income >= 15000:
-    result = "Medium high income"
+    result = "Median high income"
 elif income >= 10000:
-    result = "Medium income"
+    result = "Median income"
 elif income >= 8000:
-    result = "Medium low income"
+    result = "Median low income"
 else:
     result = "Low income"
 
