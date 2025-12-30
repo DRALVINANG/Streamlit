@@ -15,4 +15,4 @@ elif income >= 8000:
 else:
     result = "Alvin POK KAI NO MONEY!!!"
 
-st.write(f"Based on your income of {income}, your income level is: {result}")
+st.write(f"{income} = {result}")
