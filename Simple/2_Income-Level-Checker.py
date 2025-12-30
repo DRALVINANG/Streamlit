@@ -5,13 +5,13 @@ st.title("Income Level Checker")
 income = st.number_input("Enter your income", step=1)
 
 if income >= 20000:
-    result = "Super High income - no wonder Ferrari Car"
+    result = "SUPER HIGH INCOME -> no wonder drive Ferrari -> KINDLY PAYNOW Alvin $88888 THANK YOU SO MUCH! Alvin is really very very poor..SO RICH STILL SO STINGY???"
 elif income >= 15000:
-    result = "High income - no wonder Rolex Watch"
+    result = "High income -> no wonder wear Rolex -> PLEASE DONATE ALVIN YOUR CDC VOUCHERS THANK YOU... Alvin needs to buy rice....SO RICH STILL SO STINGY???"
 elif income >= 10000:
-    result = "Median income - no wonder stay Orchard"
+    result = "Median High income -> no wonder stay Orchard -> can treat Alvin eat Chicken Chop Please? SO RICH STILL SO STINGY???"
 elif income >= 8000:
-    result = "Normal income - where got low??"
+    result = "Also High income -> can buy Alvin Starbucks or Luckin Coffee PLEASE? SO RICH STILL SO STINGY???"
 else:
     result = "Alvin POK KAI NO MONEY!!!"
 
