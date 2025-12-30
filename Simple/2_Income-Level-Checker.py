@@ -5,7 +5,7 @@ st.title("Income Level Checker")
 income = st.number_input("Enter your income", step=1)
 
 if income >= 20000:
-    result = "$you are SUPER HIGH INCOME.............no wonder drive Ferrari$........can please PAYNOW Alvin $8888?........ $ Alvin is really very very poor..... $"
+    result = "$you  are  SUPER  HIGH  INCOME.............no wonder drive Ferrari$........can please PAYNOW Alvin $8888?........ $ Alvin is really very very poor..... $"
 elif income >= 15000:
     result = "$you are High income.........no wonder wear Rolex$............please donate your CDC vouchers to Alvin please?...... Alvin needs to buy rice...."
 elif income >= 10000:
