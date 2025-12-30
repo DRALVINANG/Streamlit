@@ -5,14 +5,14 @@ st.title("Income Level Checker")
 income = st.number_input("Enter your income", step=1)
 
 if income >= 20000:
-    result = "$$$ you  are  SUPER  HIGH  INCOME.............$no wonder drive Ferrari$........can please PAYNOW Alvin $8888? ........$$Alvin is really very very poor$$....."
+    result = """<span style="color:red;">$$$ you are SUPER HIGH INCOME.............$$ no wonder drive Ferrari$........can please PAYNOW Alvin $8888? ........Alvin is really very very poor.....</span>"""
 elif income >= 15000:
-    result = "$$$ you are High income.........$no wonder wear Rolex$............please donate your CDC vouchers to Alvin please?...... $$Alvin needs to buy rice$$...."
+    result = """<span style="color:green;">$$$ you are High income.........$$ no wonder wear Rolex$............please donate your CDC vouchers to Alvin please?...... Alvin needs to buy rice....</span>"""
 elif income >= 10000:
-    result = "$$$ you are Median High income....... $no wonder stay Orchard$....... can treat Alvin eat Chicken Chop Please?........$$YOU ARE SO RICH STILL SO STINGY???$$"
+    result = """<span style="color:orange;">$$$ you are Median High income....... $$ no wonder stay Orchard$....... can treat Alvin eat Chicken Chop Please?........YOU ARE SO RICH STILL SO STINGY???</span>"""
 elif income >= 8000:
-    result = "$$$ you are still High income........$can buy Alvin Starbucks or Luckin Coffee$ PLEASE? .................$$YOU STILL SO STINGY???$$"
+    result = """<span style="color:blue;">$$$ you are still High income........$$ can buy Alvin Starbucks or Luckin Coffee$ PLEASE? .................YOU STILL SO STINGY???</span>"""
 else:
-    result = "     Alvin POK KAI NO MONEY!!!.........."
+    result = """<span style="color:red;">Alvin POK KAI NO MONEY!!!..........</span>"""
 
-st.write(f"$${income}$$ = {result}")
+st.markdown(f"$$${income}$$ = {result}", unsafe_allow_html=True)
