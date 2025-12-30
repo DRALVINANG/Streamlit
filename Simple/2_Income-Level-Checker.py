@@ -5,14 +5,14 @@ st.title("Income Level Checker")
 income = st.number_input("Enter your income", step=1)
 
 if income >= 20000:
-    result = "High income"
+    result = "Super High income - no wonder Ferrari Car"
 elif income >= 15000:
-    result = "Median high income"
+    result = "High income - no wonder Rolex Watch"
 elif income >= 10000:
-    result = "Median income"
+    result = "Median income - no wonder stay Orchard"
 elif income >= 8000:
-    result = "Median low income"
+    result = "Normal income - where got low??"
 else:
-    result = "Low income"
+    result = "Alvin POK KAI NO MONEY!!!"
 
 st.write(f"Based on your income of {income}, your income level is: {result}")
